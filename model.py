@@ -1,31 +1,32 @@
+import csv
 from dotenv import load_dotenv
 from os import getenv
-from atexit import register
 from json import load
 from datetime import datetime, timedelta
 from tkinter import messagebox
 from operator import itemgetter
-import csv
+from tkinter import filedialog
 
 class Model:
     def __init__(self):
         load_dotenv()
-        register(self.cleanup)
-        self.inv_date = "1/1/99"
-        self.inv_num = 0
-        self.raw_json = open('store_pricing.json', mode='r')
-        self.new_csv = open("sample.csv", mode="w", newline='')
-        self.pricing = load(self.raw_json)
-        self.writer = csv.writer(self.new_csv, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL)
-        self.setup_csv(self)
+        self.inv_date = '1/1/99'
+        self.inv_num = '0'
+        self.manifests = [["*ContactName", "*InvoiceNumber", "Reference", "*InvoiceDate", "*DueDate", "InventoryItemCode", "*Description", "*Quantity", "*UnitAmount", "*AccountCode", "*TaxType"]]
+        self.json_file = open('./store_pricing.json', mode='r')
+        self.pricing = load(self.json_file)
     
     def set_inv_info(self, date, num):
         self.inv_date = date
         self.inv_num = num
-
-    def setup_csv(self):
-        headings = ["*ContactName", "*InvoiceNumber", "Reference", "*InvoiceDate", "*DueDate", "InventoryItemCode", "*Description", "*Quantity", "*UnitAmount", "*AccountCode", "*TaxType"]
-        self.writer.writerow(headings)
+    
+    def save_csv(self):
+        dir = filedialog.asksaveasfilename(initialdir='./', filetypes=[('CSV files', '*.csv')], defaultextension='.csv')
+        csv_file = open(dir, mode='w', newline='')
+        writer = csv.writer(csv_file, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL)
+        writer.writerows(self.manifests)
+        csv_file.close()
+        print(dir)
 
     def generate_fixed_info(self):
         now = datetime.strptime(self.inv_date, '%d/%m/%y')
@@ -61,21 +62,20 @@ class Model:
                 #UnitAmount i.e. Price
                 row_to_add.insert(8, self.choose_unit_amount(i, loads[i][1]))
 
-                self.writer.writerow(row_to_add)
+                self.manifests.append(row_to_add)
+                print(self.manifests)
         except Exception as e:
             messagebox.showerror('Error', f'Store number {e} does not exist')
 
-    def choose_inv_code(i):
+    def choose_inv_code(self, i):
         if i == 0:
             return "AD-PRIM"
         return "DROP-RATE"
 
-    def choose_unit_amount(i, price):
+    def choose_unit_amount(self, i, price):
         if i == 0:
             return price
         return '50'
 
     def cleanup(self):
-        print("Closing json and csv files")
-        self.raw_json.close()
-        self.new_csv.close()
+        self.json_file.close()
