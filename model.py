@@ -26,7 +26,6 @@ class Model:
         writer = csv.writer(csv_file, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL)
         writer.writerows(self.manifests)
         csv_file.close()
-        print(dir)
 
     def generate_fixed_info(self):
         now = datetime.strptime(self.inv_date, '%d/%m/%y')
@@ -63,7 +62,6 @@ class Model:
                 row_to_add.insert(8, self.choose_unit_amount(i, loads[i][1]))
 
                 self.manifests.append(row_to_add)
-                print(self.manifests)
         except Exception as e:
             messagebox.showerror('Error', f'Store number {e} does not exist')
 
