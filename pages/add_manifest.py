@@ -4,7 +4,7 @@ from pages import page_class
 
 class AddManifest(page_class.Page):
     def __init__(self, state):
-        page_class.Page.__init__(self, state)
+        page_class.Page.__init__(self, state, 300, 700)
         self.manifest_info()
         self.load_input()
 

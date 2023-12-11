@@ -7,7 +7,7 @@ from pages import page_class
 
 class Home(page_class.Page):
     def __init__(self, state):
-        page_class.Page.__init__(self, state)
+        page_class.Page.__init__(self, state, 200, 200)
         self.invoice_info()
         self.save_dir()
 
