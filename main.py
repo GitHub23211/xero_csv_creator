@@ -1,11 +1,11 @@
-from datetime import datetime, timedelta, date
 from dotenv import load_dotenv
 from os import getenv
+from atexit import register
+from json import load
+from datetime import datetime, timedelta
 from tkinter import messagebox
-import atexit
-import csv
-import json
 from operator import itemgetter
+import csv
 
 def setup_csv():
     headings = ["*ContactName", "*InvoiceNumber", "Reference", "*InvoiceDate", "*DueDate", "InventoryItemCode", "*Description", "*Quantity", "*UnitAmount", "*AccountCode", "*TaxType"]
@@ -67,8 +67,7 @@ def cleanup():
 load_dotenv()
 raw_json = open('store_pricing.json', mode='r')
 new_csv = open("sample.csv", mode="w", newline='')
-pricing = json.load(raw_json)
+pricing = load(raw_json)
 writer = csv.writer(new_csv, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL)
 setup_csv()
-
-atexit.register(cleanup)
+register(cleanup)
