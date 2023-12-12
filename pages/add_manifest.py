@@ -34,10 +34,13 @@ class AddManifest(page_class.Page):
             load_info.append(str_no_ent)
 
         add_ent_btn = Button(master=frame, text="Add Manifest", command=lambda : self.update_added_manifests(load_info, man_date_ent.get(), man_no_ent.get()))
-        add_ent_btn.grid(row=7, column=0, sticky="w")
+        add_ent_btn.grid(row=7, column=0)
+
+        del_ent_btn = Button(master=frame, text="Delete Last Entry", command=self.delete_manifest)
+        del_ent_btn.grid(row=7, column=1)
 
         save_csv_btn = Button(master=frame, text='Save CSV', command=self.model.save_csv)
-        save_csv_btn.grid(row=7, column=1)
+        save_csv_btn.grid(row=7, column=2)
 
         man_date_ent.focus()
     
@@ -48,7 +51,7 @@ class AddManifest(page_class.Page):
         title_lbl = Label(master=frame, text='Added Manifests')
         title_lbl.grid(row=0, column=0)
 
-        listbox = Listbox(frame, height=10, listvariable=self.man_var)
+        listbox = Listbox(frame, height=10, width=50, listvariable=self.man_var)
 
         scroll = Scrollbar(master=frame, orient=VERTICAL, command=listbox.yview)
         listbox.configure(yscrollcommand=scroll.set)
@@ -59,7 +62,13 @@ class AddManifest(page_class.Page):
     def update_added_manifests(self, load_info, date, num):
         self.model.add_manifest(load_info, date, num)
         manifests = self.model.get_added_manifests()
-        show_manifests = [manifests[i][6] for i in range(1, len(manifests))]
+        show_manifests = [f'{manifests[i][6]} - ${manifests[i][8]}' for i in range(1, len(manifests))]
         self.man_var.set(show_manifests)
 
+    def delete_manifest(self):
+        manifests = self.model.get_added_manifests()
+        if len(manifests) > 1:
+            manifests.pop()
+            show_manifests = [f'{manifests[i][6]} - ${manifests[i][8]}' for i in range(1, len(manifests))]
+            self.man_var.set(show_manifests)
 
