@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import messagebox
 
 import router
 from pages import add_manifest
@@ -27,5 +28,9 @@ class Home(page_class.Page):
         man_page_btn.grid(row=3, column=0)
     
     def nav_add_manifests(self, date, num):
-        self.model.set_inv_info(date, num)
-        router.change_view(self, add_manifest.AddManifest, self.state)
+        if(date != '' and num != ''):
+            self.model.set_inv_info(date, num)
+            router.change_view(self, add_manifest.AddManifest, self.state)
+        else:
+            messagebox.showerror('Error', 'Please enter an invoie date and number')
+        
