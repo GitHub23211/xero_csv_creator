@@ -50,7 +50,7 @@ class Model:
         store_nums = [x for x in filter(lambda x : x.get() != '', m)]
         try:
             loads = [self.pricing[x.get()] for x in store_nums]
-            loads.sort(key=itemgetter(1), reverse=True)
+            loads.sort(key=itemgetter(2), reverse=True)
             for i in range(0, len(loads)):
                 #Generate fixed columns
                 row_to_add = self.generate_fixed_info()
@@ -59,10 +59,10 @@ class Model:
                 row_to_add.insert(5, self.choose_inv_code(i))
 
                 #Description
-                row_to_add.insert(6, f'{man_date} - {store_nums[i].get()} - {loads[i][0]} - {man_num}')
+                row_to_add.insert(6, f'{man_date} - {loads[i][0]} - {loads[i][1]} - {man_num}')
 
                 #UnitAmount i.e. Price
-                row_to_add.insert(8, self.choose_unit_amount(i, loads[i][1]))
+                row_to_add.insert(8, self.choose_unit_amount(i, loads[i][2]))
 
                 self.manifests.append(row_to_add)
         except Exception as e:
