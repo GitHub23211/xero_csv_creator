@@ -20,6 +20,9 @@ class Model:
         self.inv_date = date
         self.inv_num = num
     
+    def get_added_manifests(self):
+        return self.manifests
+    
     def save_csv(self):
         dir = filedialog.asksaveasfilename(initialdir='./', filetypes=[('CSV files', '*.csv')], defaultextension='.csv')
         csv_file = open(dir, mode='w', newline='')
