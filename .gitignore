@@ -3,3 +3,7 @@
 /__pycache__
 *.csv
 *.json
+*.ipynb
+/build
+/dist
+*.spec
