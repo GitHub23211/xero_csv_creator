@@ -12,6 +12,7 @@ class AddManifest(page_class.Page):
         self.manifest_input()
         self.store_input()
         self.added_manifests()
+        self.man_date_ent.focus()
 
     def manifest_input(self):
         frame = Frame(self)
@@ -42,14 +43,23 @@ class AddManifest(page_class.Page):
             self.load_info.append(str_no_ent)
         
         def buttons():
-            add_ent_btn = Button(frame, text="Add Manifest", command=lambda : self.update_added_manifests(self.man_date_ent.get(), self.man_num_ent.get()))
+            add_ent_btn = Button(frame, text="Add Manifest", command=add_manifest)
             add_ent_btn.grid(row=1, column=1, padx=20, sticky=(E, W))
 
-            del_ent_btn = Button(frame, text="Delete Last Entry", command=lambda : print("hi"))
+            del_ent_btn = Button(frame, text="Delete Last Entry", command=self.delete_manifest)
             del_ent_btn.grid(row=2, column=1, padx=20, sticky=(E, W))
 
             save_csv_btn = Button(frame, text='Save CSV', command=self.model.save_csv)
             save_csv_btn.grid(row=3, column=1, padx=20, sticky=(E, W))
+
+        def add_manifest(event=None):
+            self.update_added_manifests(self.man_date_ent.get(), self.man_num_ent.get())
+            for i in range(0, 3):
+                self.load_info[i].delete(0, 'end')
+            self.man_num_ent.delete(0, 'end')
+            self.man_num_ent.focus()
+
+        self.root.bind('<Return>', add_manifest)
         buttons()   
 
     def added_manifests(self):
