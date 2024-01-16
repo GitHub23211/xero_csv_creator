@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from os import getenv
 from json import load
 from datetime import datetime, timedelta
-from tkinter import messagebox
+
 from operator import itemgetter
 from tkinter import filedialog
 
@@ -75,7 +75,8 @@ class Model:
 
                 self.manifests.append(row_to_add)
         except Exception as e:
-            messagebox.showerror('Error', f'Store number {e} does not exist')
+            raise e
+
 
     def choose_inv_code(self, i):
         if i == 0:

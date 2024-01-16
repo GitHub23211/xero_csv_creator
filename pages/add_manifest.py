@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import messagebox
 
 from pages import page_class
 
@@ -53,11 +54,14 @@ class AddManifest(page_class.Page):
             save_csv_btn.grid(row=3, column=1, padx=20, sticky=(E, W))
 
         def add_manifest(event=None):
-            self.update_added_manifests(self.man_date_ent.get(), self.man_num_ent.get())
-            for i in range(0, 3):
-                self.load_info[i].delete(0, 'end')
-            self.man_num_ent.delete(0, 'end')
-            self.man_num_ent.focus()
+            try:
+                self.update_added_manifests(self.man_date_ent.get(), self.man_num_ent.get())
+                for i in range(0, 3):
+                    self.load_info[i].delete(0, 'end')
+                self.man_num_ent.delete(0, 'end')
+                self.man_num_ent.focus()
+            except Exception as e:
+                messagebox.showerror('Error', f'Store number {e} does not exist')
 
         self.root.bind('<Return>', add_manifest)
         buttons()   
