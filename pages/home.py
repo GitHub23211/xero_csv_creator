@@ -23,16 +23,17 @@ class Home(page_class.Page):
             valid = re.match('[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{2}', s) is not None
             man_page_btn.state(['!disabled'] if valid else ['disabled'])
             if op == 'key':
-                curr_valid = re.match('[0-9/]*', s) is not None
-                if curr_valid:
-                    err.set('Invalid input')
+                curr_valid = re.fullmatch('[0-9/]*', s) is not None
+                if not curr_valid:
+                    err.set('Numbers and / only')
                     date_err_lbl.grid(row=1, column=1)
                 if len(s) > 8:
                     return False
+                print(re.fullmatch('[0-9/]*', s))
                 return curr_valid
             elif op == 'focusout':
                 if not valid:
-                    err.set('Invalid input')
+                    err.set('Invalid format')
                     date_err_lbl.grid(row=1, column=1)
             return valid
 
