@@ -1,4 +1,5 @@
 import csv
+from copy import deepcopy
 from dotenv import load_dotenv
 from os import getenv
 from json import load
@@ -24,21 +25,26 @@ class Model:
         return self.manifests
     
     def save_csv(self):
+        to_save = deepcopy(self.manifests)
         dir = filedialog.asksaveasfilename(initialdir='./', filetypes=[('CSV files', '*.csv')], defaultextension='.csv')
         csv_file = open(dir, mode='w', newline='')
         writer = csv.writer(csv_file, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL)
+        self.add_reference(to_save)
         writer.writerows(self.manifests)
         csv_file.close()
+    
+    def add_reference(self, list):
+        first_man_date = list[1][2]
+        last_man_date = list[len(list) - 1][2]
+        for i in range(1, len(list)):
+            list[i].insert(2, f"LOCAL: {first_man_date}-{last_man_date}")
 
     def generate_fixed_info(self):
         now = datetime.strptime(self.inv_date, '%d/%m/%y')
-        week = now + timedelta(days=6)
         due = now + timedelta(days=30)
-        reference = f"LOCAL: {now.strftime('%d/%m')}-{week.strftime('%d/%m/%y')}"
         return [
                 getenv('CONTACT'), 
                 self.inv_num.zfill(8),
-                reference,
                 now.strftime('%d/%m/%y'),
                 due.strftime('%d/%m/%y'),
                 1,
@@ -56,13 +62,16 @@ class Model:
                 row_to_add = self.generate_fixed_info()
 
                 #Inventory Code
-                row_to_add.insert(5, self.choose_inv_code(i))
+                row_to_add.insert(4, self.choose_inv_code(i))
 
                 #Description
-                row_to_add.insert(6, f'{man_date} - {loads[i][0]} - {loads[i][1]} - {man_num}')
+                if i == 0:
+                    row_to_add.insert(5, f'{man_date} - {loads[i][0]} - {loads[i][1]} - {man_num}')
+                else:
+                    row_to_add.insert(5, f'{man_date} - {loads[i][0]} - {loads[i][1]}')
 
                 #UnitAmount i.e. Price
-                row_to_add.insert(8, self.choose_unit_amount(i, loads[i][2]))
+                row_to_add.insert(7, self.choose_unit_amount(i, loads[i][2]))
 
                 self.manifests.append(row_to_add)
         except Exception as e:
