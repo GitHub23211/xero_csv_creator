@@ -29,7 +29,6 @@ class Home(page_class.Page):
                     date_err_lbl.grid(row=1, column=1)
                 if len(s) > 8:
                     return False
-                print(re.fullmatch('[0-9/]*', s))
                 return curr_valid
             elif op == 'focusout':
                 if not valid:
