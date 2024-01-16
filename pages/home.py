@@ -51,8 +51,10 @@ class Home(page_class.Page):
         man_page_btn.grid(row=3, column=0)
         man_page_btn.state(['disabled'])
 
-        date_err_lbl = Label(frame, textvariable=self.err, fg='red')
+        date_err_lbl = Label(frame, textvariable=err, fg='red')
         date_err_lbl.grid(row=4, column=1)
+
+        date_ent.focus()
         
     def nav_add_manifests(self, date, num):
         if(date != '' and num != ''):
