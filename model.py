@@ -30,7 +30,7 @@ class Model:
         csv_file = open(dir, mode='w', newline='')
         writer = csv.writer(csv_file, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL)
         self.add_reference(to_save)
-        writer.writerows(self.manifests)
+        writer.writerows(to_save)
         csv_file.close()
     
     def add_reference(self, list):
