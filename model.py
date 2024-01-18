@@ -1,4 +1,5 @@
 import csv
+import re
 from copy import deepcopy
 from dotenv import load_dotenv
 from os import getenv
@@ -31,10 +32,9 @@ class Model:
         csv_file.close()
     
     def add_reference(self, list):
-        first_man_date = list[1][2]
-        last_man_date = list[len(list) - 1][2]
+        last_man_date = re.search('[0-9]{1,2}/[0-9]{1,2}/[0-9]{2}', list[-1][5])
         for i in range(1, len(list)):
-            list[i].insert(2, f"LOCAL: {first_man_date}-{last_man_date}")
+            list[i].insert(2, f"LOCAL: {self.inv_date}-{last_man_date.group(0)}")
 
     def generate_fixed_info(self):
         now = datetime.strptime(self.inv_date, '%d/%m/%y')
@@ -59,31 +59,17 @@ class Model:
                 row_to_add = self.generate_fixed_info()
 
                 #Inventory Code
-                row_to_add.insert(4, self.choose_inv_code(i))
+                row_to_add.insert(4, 'AD-PRIM' if i == 0 else 'DROP-RATE')
 
                 #Description
-                if i == 0:
-                    row_to_add.insert(5, f'{man_date} - {loads[i][0]} - {loads[i][1]} - {man_num}')
-                else:
-                    row_to_add.insert(5, f'{man_date} - {loads[i][0]} - {loads[i][1]}')
+                row_to_add.insert(5, f'{man_date} - {loads[i][0]} - {loads[i][1]}{f" - {man_num}" if i == 0 else ""}')
 
                 #UnitAmount i.e. Price
-                row_to_add.insert(7, self.choose_unit_amount(i, loads[i][2]))
+                row_to_add.insert(7, loads[i][2] if i == 0 else '50')
 
                 self.manifests.append(row_to_add)
         except Exception as e:
             raise e
-
-
-    def choose_inv_code(self, i):
-        if i == 0:
-            return "AD-PRIM"
-        return "DROP-RATE"
-
-    def choose_unit_amount(self, i, price):
-        if i == 0:
-            return price
-        return '50'
 
     def cleanup(self):
         self.json_file.close()
