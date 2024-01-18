@@ -21,9 +21,6 @@ class Model:
         self.inv_date = date
         self.inv_num = num
     
-    def get_added_manifests(self):
-        return self.manifests
-    
     def save_csv(self):
         to_save = deepcopy(self.manifests)
         dir = filedialog.asksaveasfilename(initialdir='./', filetypes=[('CSV files', '*.csv')], defaultextension='.csv')

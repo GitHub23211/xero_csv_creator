@@ -83,12 +83,12 @@ class AddManifest(page_class.Page):
 
     def update_added_manifests(self, date, num):
         self.model.add_manifest(self.load_info, date, num)
-        manifests = self.model.get_added_manifests()
+        manifests = self.model.manifests
         show_manifests = [f'{manifests[i][5]} - ${manifests[i][7]}' for i in range(1, len(manifests))]
         self.man_var.set(show_manifests)
 
     def delete_manifest(self):
-        manifests = self.model.get_added_manifests()
+        manifests = self.model.manifests
         if len(manifests) > 1:
             manifests.pop()
             show_manifests = [f'{manifests[i][5]} - ${manifests[i][7]}' for i in range(1, len(manifests))]
