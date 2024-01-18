@@ -13,7 +13,7 @@ class AddManifest(page_class.Page):
         self.manifest_input()
         self.store_input()
         self.added_manifests()
-        self.man_date_ent.focus()
+        self.man_num_ent.focus()
 
     def manifest_input(self):
         frame = Frame(self)
@@ -26,6 +26,7 @@ class AddManifest(page_class.Page):
         man_num_lbl.grid(row=0, column=1)
 
         self.man_date_ent = Entry(master=frame)
+        self.man_date_ent.insert(0, self.model.inv_date)
         self.man_date_ent.grid(row=1, column=0, padx=5)
 
         self.man_num_ent = Entry(master=frame)
@@ -64,6 +65,7 @@ class AddManifest(page_class.Page):
                 messagebox.showerror('Error', f'Store number {e} does not exist')
 
         self.root.bind('<Return>', add_manifest)
+        self.root.bind('<Shift_L><Return>', lambda e : self.man_date_ent.focus())
         buttons()   
 
     def added_manifests(self):
