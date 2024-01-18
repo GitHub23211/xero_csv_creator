@@ -49,7 +49,7 @@ class Model:
                 getenv('TAX')
             ]
 
-    def add_manifest(self, m, man_date, man_num):
+    def add_manifest(self, m, man_date, man_num, index):
         store_nums = [x for x in filter(lambda x : x.get() != '', m)]
         try:
             loads = [self.pricing[x.get()] for x in store_nums]
@@ -59,15 +59,15 @@ class Model:
                 row_to_add = self.generate_fixed_info()
 
                 #Inventory Code
-                row_to_add.insert(4, 'AD-PRIM' if i == 0 else 'DROP-RATE')
+                row_to_add.insert(4, 'AD-PRIM' if i == 0 and man_num else 'DROP-RATE')
 
                 #Description
-                row_to_add.insert(5, f'{man_date} - {loads[i][0]} - {loads[i][1]}{f" - {man_num}" if i == 0 else ""}')
+                row_to_add.insert(5, f'{man_date} - {loads[i][0]} - {loads[i][1]}{f" - {man_num}" if i == 0 and man_num else ""}')
 
                 #UnitAmount i.e. Price
-                row_to_add.insert(7, loads[i][2] if i == 0 else '50')
+                row_to_add.insert(7, loads[i][2] if i == 0 and man_num else '50')
 
-                self.manifests.append(row_to_add)
+                self.manifests.append(row_to_add) if index == -1 else self.manifests.insert(index, row_to_add)
         except Exception as e:
             raise e
 
