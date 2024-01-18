@@ -1,7 +1,5 @@
-from tkinter import *
-from tkinter import ttk
-from tkinter import messagebox
-import re
+from tkinter import Frame, Label, Entry, StringVar, ttk, messagebox
+from re import match, fullmatch
 
 import router
 from pages import add_manifest
@@ -20,10 +18,10 @@ class Home(page_class.Page):
         def validate_date(s, op):
             err.set('')
             date_err_lbl.grid(row=4, column=1)
-            valid = re.match('[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{2}', s) is not None
+            valid = match('[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{2}', s) is not None
             man_page_btn.state(['!disabled'] if valid else ['disabled'])
             if op == 'key':
-                curr_valid = re.fullmatch('[0-9/]*', s) is not None
+                curr_valid = fullmatch('[0-9/]*', s) is not None
                 if not curr_valid:
                     err.set('Numbers and / only')
                     date_err_lbl.grid(row=1, column=1)

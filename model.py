@@ -1,5 +1,5 @@
-import csv
-import re
+from csv import writer, QUOTE_MINIMAL
+from re import search
 from copy import deepcopy
 from dotenv import load_dotenv
 from os import getenv
@@ -26,13 +26,13 @@ class Model:
         to_save = deepcopy(self.manifests)
         dir = filedialog.asksaveasfilename(initialdir='./', filetypes=[('CSV files', '*.csv')], defaultextension='.csv')
         csv_file = open(dir, mode='w', newline='')
-        writer = csv.writer(csv_file, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL)
+        csv_writer = writer(csv_file, delimiter=",", quotechar='"', quoting=QUOTE_MINIMAL)
         self.add_reference(to_save)
-        writer.writerows(to_save)
+        csv_writer.writerows(to_save)
         csv_file.close()
     
     def add_reference(self, list):
-        last_man_date = re.search('[0-9]{1,2}/[0-9]{1,2}/[0-9]{2}', list[-1][5])
+        last_man_date = search('[0-9]{1,2}/[0-9]{1,2}/[0-9]{2}', list[-1][5])
         for i in range(1, len(list)):
             list[i].insert(2, f"LOCAL: {self.inv_date}-{last_man_date.group(0)}")
 

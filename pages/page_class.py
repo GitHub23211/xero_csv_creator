@@ -1,4 +1,4 @@
-from tkinter import *
+from tkinter import Frame
 
 class Page(Frame):
     def __init__(self, state, width, height):

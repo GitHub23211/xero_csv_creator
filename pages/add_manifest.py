@@ -1,5 +1,4 @@
-from tkinter import *
-from tkinter import messagebox
+from tkinter import Frame, Entry, Button, Label, StringVar, Listbox, Scrollbar, messagebox
 
 from pages import page_class
 
@@ -46,13 +45,13 @@ class AddManifest(page_class.Page):
         
         def buttons():
             add_ent_btn = Button(frame, text="Add Manifest", command=add_manifest)
-            add_ent_btn.grid(row=1, column=1, padx=20, sticky=(E, W))
+            add_ent_btn.grid(row=1, column=1, padx=20, sticky=('e', 'w'))
 
             del_ent_btn = Button(frame, text="Delete Last Entry", command=self.delete_manifest)
-            del_ent_btn.grid(row=2, column=1, padx=20, sticky=(E, W))
+            del_ent_btn.grid(row=2, column=1, padx=20, sticky=('e', 'w'))
 
             save_csv_btn = Button(frame, text='Save CSV', command=self.model.save_csv)
-            save_csv_btn.grid(row=3, column=1, padx=20, sticky=(E, W))
+            save_csv_btn.grid(row=3, column=1, padx=20, sticky=('e', 'w'))
 
         def add_manifest(event=None):
             try:
@@ -77,11 +76,11 @@ class AddManifest(page_class.Page):
 
         listbox = Listbox(frame, width=50, listvariable=self.man_var)
 
-        scroll = Scrollbar(frame, orient=VERTICAL, command=listbox.yview)
+        scroll = Scrollbar(frame, orient='vertical', command=listbox.yview)
         listbox.configure(yscrollcommand=scroll.set)
 
-        listbox.grid(row=1, column=0, sticky=E)
-        scroll.grid(row=1, column=1, sticky=(N,S))
+        listbox.grid(row=1, column=0, sticky='e')
+        scroll.grid(row=1, column=1, sticky=('n', 's'))
 
     def update_added_manifests(self, date, num):
         self.model.add_manifest(self.load_info, date, num)
