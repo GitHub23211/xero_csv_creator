@@ -1,4 +1,4 @@
-from tkinter import Frame, Entry, Button, Label, StringVar, Listbox, Scrollbar, messagebox
+from tkinter import Frame, Entry, Button, Label, Listbox, Scrollbar, Checkbutton, StringVar, BooleanVar,  messagebox
 
 from pages import page_class
 
@@ -11,6 +11,8 @@ class AddManifest(page_class.Page):
         self.lbox = None
         self.lbox_index = -1
         self.load_info = []
+        self.loaded_check = None
+        self.loaded = BooleanVar(value=False)
         self.manifest_input()
         self.store_input()
         self.added_manifests()
@@ -37,23 +39,26 @@ class AddManifest(page_class.Page):
         frame = Frame(self)
         frame.grid(row=1, column=0)
 
-        str_num_lbl = Label(frame, text="Store Number")
-        str_num_lbl.grid(row=0, column=0)
+        self.loaded_check = Checkbutton(frame, text='Loaded by driver?', variable=self.loaded, takefocus=0)
+        self.loaded_check.grid(row=0, column=1)
 
-        for i in range(1, 4):
+        str_num_lbl = Label(frame, text="Store Number")
+        str_num_lbl.grid(row=1, column=0)
+
+        for i in range(2, 5):
             str_no_ent = Entry(frame)
             str_no_ent.grid(row=i, column=0)
             self.load_info.append(str_no_ent)
         
         def buttons():
             add_ent_btn = Button(frame, text="Add Manifest", command=self.append_manifest, takefocus=0)
-            add_ent_btn.grid(row=1, column=1, padx=20, sticky=('e', 'w'))
+            add_ent_btn.grid(row=2, column=1, padx=20, sticky=('e', 'w'))
 
             del_ent_btn = Button(frame, text="Delete Last Entry", command=self.delete_manifest, takefocus=0)
-            del_ent_btn.grid(row=2, column=1, padx=20, sticky=('e', 'w'))
+            del_ent_btn.grid(row=3, column=1, padx=20, sticky=('e', 'w'))
 
             save_csv_btn = Button(frame, text='Save CSV', command=self.model.save_csv, takefocus=0)
-            save_csv_btn.grid(row=3, column=1, padx=20, sticky=('e', 'w'))
+            save_csv_btn.grid(row=4, column=1, padx=20, sticky=('e', 'w'))
 
         self.root.bind('<Return>', self.append_manifest)
         buttons()   
@@ -83,6 +88,8 @@ class AddManifest(page_class.Page):
             self.lbox.select_clear('active', 'end')
             self.lbox_index = -1
             self.lbox.yview_moveto(1)
+            if self.loaded.get():
+                self.loaded_check.invoke()
             self.man_num_ent.focus()
         except Exception as e:
             messagebox.showerror('Error', f'Store number {e} does not exist')
@@ -95,7 +102,7 @@ class AddManifest(page_class.Page):
             self.lbox_index = -1 if len(self.lbox.curselection()) == 0 else self.lbox.curselection()[0] + 2
         
     def update_added_manifests(self, date, num):
-        self.model.add_manifest(self.load_info, date, num, self.lbox_index)
+        self.model.add_manifest(self.load_info, date, num, self.loaded.get(), self.lbox_index)
         manifests = self.model.manifests
         show_manifests = [f'{manifests[i][5]} - ${manifests[i][7]}' for i in range(1, len(manifests))]
         self.man_var.set(show_manifests)

@@ -49,7 +49,7 @@ class Model:
                 getenv('TAX')
             ]
 
-    def add_manifest(self, m, man_date, man_num, index):
+    def add_manifest(self, m, man_date, man_num, loaded, index):
         store_nums = [x for x in filter(lambda x : x.get() != '', m)]
         try:
             loads = [self.pricing[x.get()] for x in store_nums]
@@ -68,6 +68,12 @@ class Model:
                 row_to_add.insert(7, loads[i][2] if i == 0 and man_num else '50')
 
                 self.manifests.append(row_to_add) if index == -1 else self.manifests.insert(index, row_to_add)
+            if loaded:
+                allowance = self.generate_fixed_info()
+                allowance.insert(4, 'ALLWNCE')
+                allowance.insert(5, self.pricing['ALLWNCE'][0])
+                allowance.insert(7, self.pricing['ALLWNCE'][1])
+                self.manifests.append(allowance)
         except Exception as e:
             raise e
 
