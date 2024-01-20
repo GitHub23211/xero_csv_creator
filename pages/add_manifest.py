@@ -3,8 +3,8 @@ from tkinter import Frame, Entry, Button, Label, Listbox, Scrollbar, Checkbutton
 from pages import page_class
 
 class AddManifest(page_class.Page):
-    def __init__(self, state):
-        page_class.Page.__init__(self, state, 270, 350)
+    def __init__(self, root, model):
+        page_class.Page.__init__(self, root, model, 270, 350)
         self.man_var = StringVar(value=[])
         self.man_date_ent = None
         self.man_num_ent = None

@@ -1,13 +1,11 @@
 from tkinter import Frame, Label, Entry, StringVar, ttk, messagebox
 from re import match, fullmatch
 
-import router
-from pages import add_manifest
-from pages import page_class
+from pages import page_class, add_manifest
 
 class Home(page_class.Page):
-    def __init__(self, state):
-        page_class.Page.__init__(self, state, 200, 200)
+    def __init__(self, root, model):
+        page_class.Page.__init__(self, root, model, 200, 200)
         self.invoice_info()
 
     def invoice_info(self):
@@ -39,7 +37,7 @@ class Home(page_class.Page):
         date_lbl.grid(row=0, column=0, sticky="w")
         num_lbl.grid(row=2, column=0, sticky="w")
 
-        validate_date_wrapper = (self.root.register(validate_date), '%P', '%V')
+        validate_date_wrapper = (self.register(validate_date), '%P', '%V')
         date_ent = Entry(frame, validate='all', validatecommand=validate_date_wrapper)
         num_ent = Entry(frame)
         date_ent.grid(row=0, column=1)
@@ -57,6 +55,6 @@ class Home(page_class.Page):
     def nav_add_manifests(self, date, num):
         if(date != '' and num != ''):
             self.model.set_inv_info(date, num)
-            router.change_view(self, add_manifest.AddManifest, self.state)
+            self.root.switch_frames(add_manifest.AddManifest)
         else:
             messagebox.showerror('Error', 'Please enter an invoie date and number')
