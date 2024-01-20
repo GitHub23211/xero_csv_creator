@@ -29,7 +29,7 @@ class Home(page_class.Page):
                     return False
                 return curr_valid
             elif op == 'focusout':
-                if not valid:
+                if not valid and len(s) > 0:
                     err.set('Invalid format')
                     date_err_lbl.grid(row=1, column=1)
             return valid
