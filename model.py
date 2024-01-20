@@ -73,7 +73,7 @@ class Model:
                 allowance.insert(4, self.pricing['ALLWNCE'][0])
                 allowance.insert(5, self.pricing['ALLWNCE'][1])
                 allowance.insert(7, self.pricing['ALLWNCE'][2])
-                self.manifests.append(allowance)
+                self.manifests.append(allowance) if index == -1 else self.manifests.insert(index+1, allowance)
         except Exception as e:
             raise e
 
