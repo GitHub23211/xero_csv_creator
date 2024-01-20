@@ -70,9 +70,9 @@ class Model:
                 self.manifests.append(row_to_add) if index == -1 else self.manifests.insert(index, row_to_add)
             if loaded:
                 allowance = self.generate_fixed_info()
-                allowance.insert(4, 'ALLWNCE')
-                allowance.insert(5, self.pricing['ALLWNCE'][0])
-                allowance.insert(7, self.pricing['ALLWNCE'][1])
+                allowance.insert(4, self.pricing['ALLWNCE'][0])
+                allowance.insert(5, self.pricing['ALLWNCE'][1])
+                allowance.insert(7, self.pricing['ALLWNCE'][2])
                 self.manifests.append(allowance)
         except Exception as e:
             raise e
