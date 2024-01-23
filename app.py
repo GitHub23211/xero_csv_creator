@@ -1,25 +1,32 @@
-import tkinter as tk
+from tkinter import Tk
+from tkinter.ttk import Notebook
 from atexit import register
 
-from pages import home
+from pages import home, local
 import model
 
-class App(tk.Tk):
-    def __init__(self, model, page):
-        tk.Tk.__init__(self)
-        self.curr_frame = None
+class App(Tk):
+    def __init__(self, model):
+        Tk.__init__(self)
+        self.minsize(270, 350)
+        self.title("Xero Invoice Creator")
         self.model = model
-        self.switch_frames(page)
+        self.notebook = Notebook(self)
+        self.create_tabs()
+        self.notebook.grid()
     
-    def switch_frames(self, new):
-        new_frame = new(self, self.model)
-        if self.curr_frame is not None:
-            self.curr_frame.destroy()
-        self.curr_frame = new_frame
-        self.curr_frame.grid()
+    def create_tabs(self):
+        # r_tab = home.Home(self.notebook, self.model)
+        # f_tab = home.Home(self.notebook, self.model)
+        l_tab = local.Local(self.notebook, self.model, home.Home)
+        # b_tab =  home.Home(self.notebook, self.model)
+        # self.notebook.add(r_tab, text='Rigid')
+        # self.notebook.add(f_tab, text='Freezer')
+        self.notebook.add(l_tab, text='Local')
+        # self.notebook.add(b_tab, text='Billing')
 
 if __name__ == '__main__':
     model = model.Model()
-    app = App(model, home.Home)
+    app = App(model)
     register(model.cleanup)
     app.mainloop()
