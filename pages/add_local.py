@@ -1,10 +1,10 @@
 from tkinter import Frame, Entry, Button, Label, Listbox, Scrollbar, Checkbutton, StringVar, BooleanVar,  messagebox
 
-from pages import page_class
+from pages import page
 
-class AddManifest(page_class.Page):
+class AddLocal(page.Page):
     def __init__(self, root, model):
-        page_class.Page.__init__(self, root, model, 270, 350)
+        page.Page.__init__(self, root, model)
         self.man_var = StringVar(value=[])
         self.man_date_ent = None
         self.man_num_ent = None
@@ -13,6 +13,9 @@ class AddManifest(page_class.Page):
         self.load_info = []
         self.loaded_check = None
         self.loaded = BooleanVar(value=False)
+        self.grid()
+    
+    def build(self):
         self.manifest_input()
         self.store_input()
         self.added_manifests()
@@ -60,7 +63,7 @@ class AddManifest(page_class.Page):
             save_csv_btn = Button(frame, text='Save CSV', command=self.model.save_csv, takefocus=0)
             save_csv_btn.grid(row=4, column=1, padx=20, sticky=('e', 'w'))
 
-        self.root.bind('<Return>', self.append_manifest)
+        self.master.master.master.bind('<Return>', self.append_manifest)
         buttons()   
 
     def added_manifests(self):
