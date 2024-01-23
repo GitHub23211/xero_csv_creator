@@ -6,11 +6,9 @@ class Local(page.Page):
         self.curr_frame = None
         self.grid()
         self.build(home(self, self.model))
-   
 
     def build(self, new_page):
         if self.curr_frame is not None:
             self.curr_frame.destroy()
-            print('destr')
         self.curr_frame = new_page
         self.curr_frame.build()
