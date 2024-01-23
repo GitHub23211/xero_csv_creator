@@ -15,8 +15,9 @@ class Model:
         self.inv_date = '1/1/99'
         self.inv_num = '0'
         self.manifests = [["*ContactName", "*InvoiceNumber", "Reference", "*InvoiceDate", "*DueDate", "InventoryItemCode", "*Description", "*Quantity", "*UnitAmount", "*AccountCode", "*TaxType"]]
-        self.json_file = open('./store_pricing.json', mode='r')
-        self.pricing = load(self.json_file)
+        self.json_files = [open('./billing.json', mode='r'), open('./store_pricing.json', mode='r')]
+        self.billing = load(self.json_files[0])
+        self.pricing = load(self.json_files[1])
     
     def set_inv_info(self, date, num):
         self.inv_date = date
@@ -77,6 +78,13 @@ class Model:
                     self.manifests.append(allowance) if index == -1 else self.manifests.insert(index+1, allowance)
             except Exception as e:
                 raise e
+    
+    def add_bills(self, data):
+        bills = [].extend(self.manifests)
+        for emp in data:
+            for loads in data[emp]:
+                print(loads.get())
 
     def cleanup(self):
-        self.json_file.close()
+        for file in self.json_files:
+            file.close()
