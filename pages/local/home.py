@@ -1,14 +1,15 @@
 from tkinter import Frame, Label, Entry, StringVar, ttk, messagebox
 from re import match, fullmatch
 
-from pages import page, add_local
+from pages import page
+from pages.local import add_local
 
 class Home(page.Page):
     def __init__(self, root, model):
         page.Page.__init__(self, root, model)
-        self.grid()
 
     def build(self):
+        self.grid()
         self.invoice_info()
 
     def invoice_info(self):
@@ -58,6 +59,6 @@ class Home(page.Page):
     def nav_add_manifests(self, date, num):
         if(date != '' and num != ''):
             self.model.set_inv_info(date, num)
-            self.master.build(add_local.AddLocal(self.master, self.model))
+            self.master.switch_view(add_local.AddLocal)
         else:
             messagebox.showerror('Error', 'Please enter an invoie date and number')

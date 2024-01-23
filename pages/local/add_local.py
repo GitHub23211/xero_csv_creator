@@ -13,9 +13,9 @@ class AddLocal(page.Page):
         self.load_info = []
         self.loaded_check = None
         self.loaded = BooleanVar(value=False)
-        self.grid()
     
     def build(self):
+        self.grid()
         self.manifest_input()
         self.store_input()
         self.added_manifests()
@@ -63,7 +63,7 @@ class AddLocal(page.Page):
             save_csv_btn = Button(frame, text='Save CSV', command=self.model.save_csv, takefocus=0)
             save_csv_btn.grid(row=4, column=1, padx=20, sticky=('e', 'w'))
 
-        self.master.master.master.bind('<Return>', self.append_manifest)
+        self.master.bind('<Return>', self.append_manifest)
         buttons()   
 
     def added_manifests(self):

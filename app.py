@@ -1,9 +1,12 @@
-from tkinter import Tk
-from tkinter.ttk import Notebook
+from tkinter import Tk, Button
 from atexit import register
 
-from pages import home, local
+from pages import top, billing
+from pages.local import home
 import model
+
+#CONSTANTS
+MAX_WIND_COUNT = 4
 
 class App(Tk):
     def __init__(self, model):
@@ -11,19 +14,23 @@ class App(Tk):
         self.minsize(270, 350)
         self.title("Xero Invoice Creator")
         self.model = model
-        self.notebook = Notebook(self)
-        self.create_tabs()
-        self.notebook.grid()
+        self.wind_count = 0
+        self.max_wind = MAX_WIND_COUNT
+        self.create_menu()
     
-    def create_tabs(self):
+    def create_menu(self):
         # r_tab = home.Home(self.notebook, self.model)
         # f_tab = home.Home(self.notebook, self.model)
-        l_tab = local.Local(self.notebook, self.model, home.Home)
-        # b_tab =  home.Home(self.notebook, self.model)
-        # self.notebook.add(r_tab, text='Rigid')
-        # self.notebook.add(f_tab, text='Freezer')
-        self.notebook.add(l_tab, text='Local')
-        # self.notebook.add(b_tab, text='Billing')
+        l_tab = Button(self, text='Local Invoicing', command=lambda : self.open_window(home.Local))
+        b_tab = Button(self, text='Billing', command=lambda : self.open_window(billing.Billing))
+
+        l_tab.grid()
+        b_tab.grid()
+    
+    def open_window(self, page):
+        if self.wind_count < self.max_wind:
+            top.Top(self, self.model, page)
+            self.wind_count = self.wind_count + 1
 
 if __name__ == '__main__':
     model = model.Model()
