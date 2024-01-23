@@ -1,9 +1,11 @@
 from tkinter import Toplevel
 
 class Top(Toplevel):
-    def __init__(self, root, model, page):
+    def __init__(self, root, model, page, title, width, height):
         Toplevel.__init__(self, root)
         self.model = model
+        self.title = title
+        self.minsize(width, height)
         self.curr_view = None
         self.switch_view(page)
     
