@@ -1,8 +1,8 @@
 from tkinter import Tk, Button
 from atexit import register
 
-from pages import top, billing
-from pages.local import home
+from pages.billing import billing
+from pages.local import local
 import model
 
 #CONSTANTS
@@ -21,15 +21,15 @@ class App(Tk):
     def create_menu(self):
         # r_tab = home.Home(self.notebook, self.model)
         # f_tab = home.Home(self.notebook, self.model)
-        l_tab = Button(self, text='Local Invoicing', command=lambda : self.open_window(home.Home, 270, 350))
+        l_tab = Button(self, text='Local Invoicing', command=lambda : self.open_window(local.Local, 270, 350))
         b_tab = Button(self, text='Billing', command=lambda : self.open_window(billing.Billing, 350, 250))
 
         l_tab.grid()
         b_tab.grid()
     
-    def open_window(self, page, width=300, height=300):
+    def open_window(self, window, width=300, height=300):
         if self.wind_count < self.max_wind:
-            top.Top(self, self.model, page, width, height)
+            window(self, self.model, width, height)
             self.wind_count = self.wind_count + 1
 
 if __name__ == '__main__':

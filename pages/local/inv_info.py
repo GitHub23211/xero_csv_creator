@@ -1,12 +1,9 @@
-from tkinter import Frame, Label, Entry, StringVar, ttk, messagebox
+from tkinter import Frame, Label, Entry, ttk, StringVar
 from re import match, fullmatch
 
-from pages import page
-from pages.local import add_local
-
-class Home(page.Page):
-    def __init__(self, root, model):
-        page.Page.__init__(self, root, model)
+class invoiceInfo(Frame):
+    def __init__(self, root):
+         Frame.__init__(self, root)
 
     def build(self):
         self.grid()
@@ -15,6 +12,11 @@ class Home(page.Page):
     def invoice_info(self):
         frame = Frame(self)
         frame.grid(row=0, column=0, padx=10, pady=10, sticky="w")
+
+        date_lbl = Label(frame, text="Invoice Date (dd/mm/yy)")
+        num_lbl = Label(frame, text="Invoice Number")
+        date_lbl.grid(row=0, column=0, sticky="w")
+        num_lbl.grid(row=2, column=0, sticky="w")
         err = StringVar(value='')
 
         def validate_date(s, op):
@@ -36,18 +38,13 @@ class Home(page.Page):
                     date_err_lbl.grid(row=1, column=1)
             return valid
 
-        date_lbl = Label(frame, text="Invoice Date (dd/mm/yy)")
-        num_lbl = Label(frame, text="Invoice Number")
-        date_lbl.grid(row=0, column=0, sticky="w")
-        num_lbl.grid(row=2, column=0, sticky="w")
-
         validate_date_wrapper = (self.register(validate_date), '%P', '%V')
         date_ent = Entry(frame, validate='all', validatecommand=validate_date_wrapper)
         num_ent = Entry(frame)
         date_ent.grid(row=0, column=1)
         num_ent.grid(row=2, column=1)
 
-        man_page_btn = ttk.Button(frame, text='Start Adding Manifests', command=lambda : self.nav_add_manifests(date_ent.get(), num_ent.get()))
+        man_page_btn = ttk.Button(frame, text='Start Adding Manifests', command=lambda : self.master.nav_add_manifests(date_ent.get(), num_ent.get()))
         man_page_btn.grid(row=3, column=0)
         man_page_btn.state(['disabled'])
 
@@ -55,10 +52,3 @@ class Home(page.Page):
         date_err_lbl.grid(row=4, column=1)
 
         date_ent.focus()
-
-    def nav_add_manifests(self, date, num):
-        if(date != '' and num != ''):
-            self.model.set_inv_info(date, num)
-            self.master.switch_view(add_local.AddLocal)
-        else:
-            messagebox.showerror('Error', 'Please enter an invoie date and number')

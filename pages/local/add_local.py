@@ -1,25 +1,16 @@
 from tkinter import Frame, Entry, Button, Label, Listbox, Scrollbar, Checkbutton, StringVar, BooleanVar,  messagebox
 
-from pages import page
 
-class AddLocal(page.Page):
-    def __init__(self, root, model):
-        page.Page.__init__(self, root, model)
-        self.man_var = StringVar(value=[])
-        self.man_date_ent = None
-        self.man_num_ent = None
-        self.lbox = None
-        self.lbox_index = -1
-        self.load_info = []
-        self.loaded_check = None
-        self.loaded = BooleanVar(value=False)
+class AddLocal(Frame):
+    def __init__(self, root):
+        Frame.__init__(self, root)
     
     def build(self):
         self.grid()
         self.manifest_input()
         self.store_input()
         self.added_manifests()
-        self.man_num_ent.focus()
+        self.master.man_num_ent.focus()
 
     def manifest_input(self):
         frame = Frame(self)
@@ -31,19 +22,19 @@ class AddLocal(page.Page):
         man_num_lbl = Label(master=frame, text='Manifest Number')
         man_num_lbl.grid(row=0, column=1)
 
-        self.man_date_ent = Entry(master=frame)
-        self.man_date_ent.insert(0, self.model.inv_date)
-        self.man_date_ent.grid(row=1, column=0, padx=5)
+        self.master.man_date_ent = Entry(master=frame)
+        self.master.man_date_ent.insert(0, self.master.inv_date)
+        self.master.man_date_ent.grid(row=1, column=0, padx=5)
 
-        self.man_num_ent = Entry(master=frame)
-        self.man_num_ent.grid(row=1, column=1, padx=5)
+        self.master.man_num_ent = Entry(master=frame)
+        self.master.man_num_ent.grid(row=1, column=1, padx=5)
 
     def store_input(self):
         frame = Frame(self)
         frame.grid(row=1, column=0)
 
-        self.loaded_check = Checkbutton(frame, text='Loaded by driver?', variable=self.loaded, takefocus=0)
-        self.loaded_check.grid(row=0, column=1)
+        self.master.loaded_check = Checkbutton(frame, text='Loaded by driver?', variable=self.master.loaded, takefocus=0)
+        self.master.loaded_check.grid(row=0, column=1)
 
         str_num_lbl = Label(frame, text="Store Number")
         str_num_lbl.grid(row=1, column=0)
@@ -51,19 +42,19 @@ class AddLocal(page.Page):
         for i in range(2, 5):
             str_no_ent = Entry(frame)
             str_no_ent.grid(row=i, column=0)
-            self.load_info.append(str_no_ent)
+            self.master.load_info.append(str_no_ent)
         
         def buttons():
-            add_ent_btn = Button(frame, text="Add Manifest", command=self.append_manifest, takefocus=0)
+            add_ent_btn = Button(frame, text="Add Manifest", command=self.master.append_manifest, takefocus=0)
             add_ent_btn.grid(row=2, column=1, padx=20, sticky=('e', 'w'))
 
-            del_ent_btn = Button(frame, text="Delete Last Entry", command=self.delete_manifest, takefocus=0)
+            del_ent_btn = Button(frame, text="Delete Last Entry", command=self.master.delete_manifest, takefocus=0)
             del_ent_btn.grid(row=3, column=1, padx=20, sticky=('e', 'w'))
 
-            save_csv_btn = Button(frame, text='Save CSV', command=self.model.save_csv, takefocus=0)
+            save_csv_btn = Button(frame, text='Save CSV', command=self.master.save_csv, takefocus=0)
             save_csv_btn.grid(row=4, column=1, padx=20, sticky=('e', 'w'))
 
-        self.master.bind('<Return>', self.append_manifest)
+        self.master.bind('<Return>', self.master.append_manifest)
         buttons()   
 
     def added_manifests(self):
@@ -73,47 +64,11 @@ class AddLocal(page.Page):
         title_lbl = Label(frame, text='Added Manifests')
         title_lbl.grid(row=0, column=0)
 
-        self.lbox = Listbox(frame, width=50, listvariable=self.man_var, exportselection=0, takefocus=0, selectmode='extended')
-        self.lbox.bind('<<ListboxSelect>>', self.update_lbox_index)
+        self.master.lbox = Listbox(frame, width=50, listvariable=self.master.man_var, exportselection=0, takefocus=0, selectmode='extended')
+        self.master.lbox.bind('<<ListboxSelect>>', self.master.update_lbox_index)
 
-        scroll = Scrollbar(frame, orient='vertical', command=self.lbox.yview)
-        self.lbox.configure(yscrollcommand=scroll.set)
+        scroll = Scrollbar(frame, orient='vertical', command=self.master.lbox.yview)
+        self.master.lbox.configure(yscrollcommand=scroll.set)
 
-        self.lbox.grid(row=1, column=0, sticky='e')
+        self.master.lbox.grid(row=1, column=0, sticky='e')
         scroll.grid(row=1, column=1, sticky=('n', 's'))
-
-    def append_manifest(self, event=None):
-        try:
-            self.update_added_manifests(self.man_date_ent.get(), self.man_num_ent.get())
-            for i in range(0, 3):
-                self.load_info[i].delete(0, 'end')
-            self.man_num_ent.delete(0, 'end')
-            self.lbox.select_clear('active', 'end')
-            self.lbox_index = -1
-            self.lbox.yview_moveto(1)
-            if self.loaded.get():
-                self.loaded_check.invoke()
-            self.man_num_ent.focus()
-        except Exception as e:
-            messagebox.showerror('Error', f'Store number {e} does not exist')
-
-    def update_lbox_index(self, event=None):
-        if self.lbox.curselection()[0] == self.lbox_index - 2:
-            self.lbox.select_clear('active', 'end')
-            self.lbox_index = -1
-        else:
-            self.lbox_index = -1 if len(self.lbox.curselection()) == 0 else self.lbox.curselection()[0] + 2
-        
-    def update_added_manifests(self, date, num):
-        self.model.add_manifest(self.load_info, date, num, self.loaded.get(), self.lbox_index)
-        manifests = self.model.manifests
-        show_manifests = [f'{manifests[i][5]} - ${manifests[i][7]}' for i in range(1, len(manifests))]
-        self.man_var.set(show_manifests)
-
-    def delete_manifest(self):
-        manifests = self.model.manifests
-        if len(manifests) > 1:
-            manifests.pop()
-            show_manifests = [f'{manifests[i][5]} - ${manifests[i][7]}' for i in range(1, len(manifests))]
-            self.man_var.set(show_manifests)
-
