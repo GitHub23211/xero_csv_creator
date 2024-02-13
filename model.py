@@ -1,6 +1,5 @@
 from csv import writer, QUOTE_MINIMAL
 from json import load
-from datetime import datetime, timedelta
 
 from tkinter import filedialog
 

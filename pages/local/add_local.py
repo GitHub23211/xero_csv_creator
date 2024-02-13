@@ -1,5 +1,4 @@
-from tkinter import Frame, Entry, Button, Label, Listbox, Scrollbar, Checkbutton, StringVar, BooleanVar,  messagebox
-
+from tkinter import Frame, Entry, Button, Label, Listbox, Scrollbar, Checkbutton
 
 class AddLocal(Frame):
     def __init__(self, root):
