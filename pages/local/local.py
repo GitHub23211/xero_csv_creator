@@ -1,6 +1,7 @@
 from tkinter import StringVar, BooleanVar, messagebox
 from operator import itemgetter
 from datetime import datetime, timedelta
+from copy import deepcopy
 from re import search
 from os import getenv
 from dotenv import load_dotenv
@@ -36,13 +37,14 @@ class Local(top.Top):
             messagebox.showerror('Error', 'Please enter an invoie date and number')
 
     def save_csv(self):
-        self.add_reference()
-        self.model.save_csv(self.invoice)
+        self.model.save_csv(self.add_reference())
     
     def add_reference(self):
-        last_man_date = search('[0-9]{1,2}/[0-9]{1,2}/[0-9]{2}', self.invoice[-1][5])
-        for i in range(1, len(self.invoice)):
-            self.invoice[i].insert(2, f"LOCAL: {self.inv_date}-{last_man_date.group(0)}")
+        complete = deepcopy(self.invoice)
+        last_man_date = search('[0-9]{1,2}/[0-9]{1,2}/[0-9]{2}', complete[-1][5])
+        for i in range(1, len(complete)):
+            complete[i].insert(2, f"LOCAL: {self.inv_date}-{last_man_date.group(0)}")
+        return complete
 
     def generate_fixed_info(self):
         now = datetime.strptime(self.inv_date, '%d/%m/%y')

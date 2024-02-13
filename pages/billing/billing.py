@@ -11,7 +11,6 @@ class Billing(top.Top):
         self.emps = self.model.billing['emps']
         self.date_var = StringVar(value='')
         self.data = {}
-        self.billing = [["*ContactName", "*InvoiceNumber", "*InvoiceDate", "*DueDate", "InventoryItemCode", "*Description", "*Quantity", "*UnitAmount", "*AccountCode", "*TaxType"]]
         self.curr_view.build()
 
     def submit(self):
@@ -24,6 +23,7 @@ class Billing(top.Top):
         try:
             bill_date = datetime.strptime(date, '%d/%m/%y')
             due_date = bill_date + timedelta(10)
+            billing = [["*ContactName", "*InvoiceNumber", "*InvoiceDate", "*DueDate", "InventoryItemCode", "*Description", "*Quantity", "*UnitAmount", "*AccountCode", "*TaxType"]]
             for emp in data:
                 emp_data = self.emps[emp]
                 for load in data[emp]:
@@ -33,7 +33,7 @@ class Billing(top.Top):
                     price = self.prices[load][1]
                     num_loads = data[emp][load].get() if data[emp][load].get() != '' else '0'
                     row_to_add = [name, bill_ref, bill_date.strftime('%d/%m/%y'), due_date.strftime('%d/%m/%y'), load, description, num_loads, price, '160', 'BAS Excluded']
-                    self.billing.append(row_to_add)
-            return self.billing
+                    billing.append(row_to_add)
+            return billing
         except Exception as e:
             raise e

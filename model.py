@@ -1,5 +1,4 @@
 from csv import writer, QUOTE_MINIMAL
-from copy import deepcopy
 from json import load
 from datetime import datetime, timedelta
 
