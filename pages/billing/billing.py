@@ -11,12 +11,12 @@ class Billing(top.Top):
         self.emps = self.model.billing['emps']
         self.date_var = StringVar(value='')
         self.data = {}
-        self.billing = None
+        self.billing = [["*ContactName", "*InvoiceNumber", "*InvoiceDate", "*DueDate", "InventoryItemCode", "*Description", "*Quantity", "*UnitAmount", "*AccountCode", "*TaxType"]]
         self.curr_view.build()
 
     def submit(self):
         try:
-            self.model.save_billing(self.model.create_billing(self.data, self.date_var.get()))
+            self.model.save_csv(self.create_billing(self.data, self.date_var.get()))
         except Exception as e:
             messagebox.showerror('Error', f'Please enter a valid date {e}')
 
@@ -24,18 +24,16 @@ class Billing(top.Top):
         try:
             bill_date = datetime.strptime(date, '%d/%m/%y')
             due_date = bill_date + timedelta(10)
-            bills = []
-            bills.extend(self.headings[0])
             for emp in data:
-                emp_data = self.billing['emps'][emp]
+                emp_data = self.emps[emp]
                 for load in data[emp]:
                     name = emp_data[0]
                     bill_ref = emp_data[1]
-                    description = self.billing['prices'][load][0]
-                    price = self.billing['prices'][load][1]
+                    description = self.prices[load][0]
+                    price = self.prices[load][1]
                     num_loads = data[emp][load].get() if data[emp][load].get() != '' else '0'
                     row_to_add = [name, bill_ref, bill_date.strftime('%d/%m/%y'), due_date.strftime('%d/%m/%y'), load, description, num_loads, price, '160', 'BAS Excluded']
-                    bills.append(row_to_add)
-            return bills
+                    self.billing.append(row_to_add)
+            return self.billing
         except Exception as e:
             raise e
