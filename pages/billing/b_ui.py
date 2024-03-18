@@ -15,7 +15,7 @@ class billingUI(Frame):
     
     def date(self):
         f = Frame(self)
-        f.grid(row=0, column=0, padx=10)
+        f.grid(row=0, column=0, padx=10, pady=10)
         Label(f, text='Start Work Date (dd/mm/yy)').grid(row=0, column=0)
         Entry(f, textvariable=self.master.date_var).grid(row=0, column=1)
 
@@ -23,4 +23,5 @@ class billingUI(Frame):
         Button(self, text='Create CSV', command=self.master.submit).grid(row=1, column=0, pady=10)
 
     def progress_bar(self):
-        ttk.Progressbar(self, orient='horizontal', length=200, mode='determinate', maximum=11.0, variable=self.master.progress_var, value=self.master.progress_var.get()).grid()
+        Label(self, text='Progress: ').grid(row=2, column=0, pady=5)
+        ttk.Progressbar(self, orient='horizontal', length=200, mode='determinate', variable=self.master.progress_var, value=self.master.progress_var.get()).grid(row=3, column=0)
