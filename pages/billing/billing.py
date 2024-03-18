@@ -82,7 +82,7 @@ class Billing(top.Top):
         regex = compile('.*xlsx$')
         spreadsheets = []
         data = []
-        self.prog_lbl_var.set('Creating CSV file...')
+        self.prog_lbl_var.set('Creating billing...')
 
         for root, dis, files in walk(rootdir):
             for file in files:

@@ -34,7 +34,7 @@ class Local(top.Top):
             self.switch_view(add_local.AddLocal)
             self.curr_view.build()
         else:
-            messagebox.showerror('Error', 'Please enter an invoie date and number')
+            messagebox.showerror('Error', 'Please enter an invoice date and number')
 
     def save_csv(self):
         self.model.save_csv(self.add_reference())
