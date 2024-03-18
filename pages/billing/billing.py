@@ -20,13 +20,17 @@ class Billing(top.Top):
     def increment_progress(self, val):
         self.prog_var.set(val)
 
-    def submit(self):
+    def submit(self, btn):
         try:
             self.prog_var.set(0.0)
+            btn.config(state='disabled')
             self.model.save_csv(self.create_billing(self.date_var.get()))
+            messagebox.showinfo('Success', 'Successfully created billing!')
             self.prog_lbl_var.set('Complete!')
+            btn.config(state='normal')
         except Exception as e:
             messagebox.showerror('Error', e)
+            btn.config(state='normal')
 
     def create_billing(self, date):
         try:
@@ -34,7 +38,6 @@ class Billing(top.Top):
             due_date = bill_date + timedelta(10)
             billing = [["*ContactName", "*InvoiceNumber", "*InvoiceDate", "*DueDate", "InventoryItemCode", "*Description", "*Quantity", "*UnitAmount", "*AccountCode", "*TaxType"]]
             data = self.extract_data()
-            self.prog_lbl_var.set('Creating CSV file...')
             for emp in data:
                 name = emp[0]
                 bill_ref = emp[1]
@@ -79,6 +82,7 @@ class Billing(top.Top):
         regex = compile('.*xlsx$')
         spreadsheets = []
         data = []
+        self.prog_lbl_var.set('Creating CSV file...')
 
         for root, dis, files in walk(rootdir):
             for file in files:

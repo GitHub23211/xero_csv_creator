@@ -17,7 +17,8 @@ class billingUI(Frame):
         Entry(self, textvariable=self.master.date_var).grid(row=0, column=1, pady=5)
 
     def save_button(self):
-        Button(self, text='Create CSV', command=self.master.submit).grid(row=3, column=0, columnspan=2, pady=8)
+        btn = Button(self, text='Create Billing', command=lambda: self.master.submit(btn))
+        btn.grid(row=3, column=0, columnspan=2, pady=8)
 
     def progress_bar(self):
         l = Label(self, textvariable=self.master.prog_lbl_var)
