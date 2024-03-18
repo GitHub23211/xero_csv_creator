@@ -10,8 +10,8 @@ from components import top
 from pages.local import inv_info, add_local
 
 class Local(top.Top):
-    def __init__(self, root, model, width, height):
-        top.Top.__init__(self, root, model, inv_info.invoiceInfo, width, height)
+    def __init__(self, root, model, width, height, close_func):
+        top.Top.__init__(self, root, model, inv_info.invoiceInfo, width, height, close_func)
         load_dotenv()
         self.invoice = [["*ContactName", "*InvoiceNumber", "Reference", "*InvoiceDate", "*DueDate", "InventoryItemCode", "*Description", "*Quantity", "*UnitAmount", "*AccountCode", "*TaxType"]]
         self.pricing = self.model.pricing

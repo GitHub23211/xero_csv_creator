@@ -8,8 +8,8 @@ from components import top
 from pages.billing import b_ui
 
 class Billing(top.Top):
-    def __init__(self, root, model, width, height):
-        top.Top.__init__(self, root, model, b_ui.billingUI, width, height)
+    def __init__(self, root, model, width, height, close_func):
+        top.Top.__init__(self, root, model, b_ui.billingUI, width, height, close_func)
         self.prices = self.model.billing
         self.date_var = StringVar(value='')
         self.prog_lbl_var = StringVar(value='Progress:')
