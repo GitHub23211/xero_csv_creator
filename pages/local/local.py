@@ -62,6 +62,8 @@ class Local(top.Top):
     def add_manifest(self):
         store_nums = [x for x in filter(lambda x : x.get() != '', self.load_info)]
         man_num = self.man_num_ent.get()
+        if len(man_num) != 7:
+            raise Exception('Manifest number format wrong')
         index = self.lbox_index
         if len(store_nums) > 0:
             try:
