@@ -23,5 +23,5 @@ class billingUI(Frame):
         Button(self, text='Create CSV', command=self.master.submit).grid(row=1, column=0, pady=10)
 
     def progress_bar(self):
-        Label(self, text='Progress: ').grid(row=2, column=0, pady=5)
-        ttk.Progressbar(self, orient='horizontal', length=200, mode='determinate', variable=self.master.progress_var, value=self.master.progress_var.get()).grid(row=3, column=0)
+        Label(self, textvariable=self.master.prog_lbl_var).grid(row=2, column=0, pady=5)
+        ttk.Progressbar(self, orient='horizontal', length=200, mode='determinate', variable=self.master.prog_var, value=self.master.prog_var.get()).grid(row=3, column=0)

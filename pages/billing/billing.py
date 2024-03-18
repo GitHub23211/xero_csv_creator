@@ -12,17 +12,19 @@ class Billing(top.Top):
         top.Top.__init__(self, root, model, b_ui.billingUI, width, height)
         self.prices = self.model.billing
         self.date_var = StringVar(value='')
-        self.progress_var = DoubleVar(value=0.0)
+        self.prog_lbl_var = StringVar(value='Progress:')
+        self.prog_var = DoubleVar(value=0.0)
         self.max_prog_var = DoubleVar(value=0.0)
         self.curr_view.build()
     
     def increment_progress(self, val):
-        self.progress_var.set(val)
+        self.prog_var.set(val)
 
     def submit(self):
         try:
-            self.progress_var.set(0.0)
+            self.prog_var.set(0.0)
             self.model.save_csv(self.create_billing(self.date_var.get()))
+            self.prog_lbl_var.set('Complete!')
         except Exception as e:
             messagebox.showerror('Error', e)
 
@@ -32,6 +34,7 @@ class Billing(top.Top):
             due_date = bill_date + timedelta(10)
             billing = [["*ContactName", "*InvoiceNumber", "*InvoiceDate", "*DueDate", "InventoryItemCode", "*Description", "*Quantity", "*UnitAmount", "*AccountCode", "*TaxType"]]
             data = self.extract_data()
+            self.prog_lbl_var.set('Creating CSV file...')
             for emp in data:
                 name = emp[0]
                 bill_ref = emp[1]
@@ -68,7 +71,7 @@ class Billing(top.Top):
             print(f'{row} has error : {e}\n')
 
     def extract_data(self):
-        messagebox.showinfo('Info', 'Choose the folder where the .xlsx files are')
+        messagebox.showinfo('Info', 'Choose the folder where the Excel files are')
         rootdir = filedialog.askdirectory(initialdir='./')
         if rootdir == '':
             raise Exception('No directory chosen')
