@@ -7,7 +7,7 @@ import model
 class App(Tk):
     def __init__(self, model):
         Tk.__init__(self)
-        self.minsize(270, 350)
+        self.minsize(200, 200)
         self.title("Xero Invoice Creator")
         self.model = model
         self.create_menu()
@@ -16,9 +16,9 @@ class App(Tk):
         l_tab = Button(self, text='Local Invoicing', command=lambda : self.open_window(local.Local, l_tab, 270, 350))
         b_tab = Button(self, text='Billing', command=lambda : self.open_window(billing.Billing, b_tab, 350, 250))
 
-        l_tab.grid()
-        b_tab.grid()
-    
+        l_tab.place(relx=0.5, rely=0.3, anchor='center', relwidth=0.5)
+        b_tab.place(relx=0.5, rely=0.5, anchor='center', relwidth=0.5)
+
     def open_window(self, window, btn, width, height):
         def on_win_close(win, btn):
             btn.config(state='normal')
