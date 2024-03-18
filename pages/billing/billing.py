@@ -1,4 +1,4 @@
-from tkinter import StringVar, messagebox, filedialog
+from tkinter import DoubleVar, StringVar, messagebox, filedialog
 from datetime import datetime, timedelta
 import openpyxl as excel
 from re import compile
@@ -12,10 +12,16 @@ class Billing(top.Top):
         top.Top.__init__(self, root, model, b_ui.billingUI, width, height)
         self.prices = self.model.billing
         self.date_var = StringVar(value='')
+        self.progress_var = DoubleVar(value=0.0)
         self.curr_view.build()
+    
+    def increment_progress(self):
+        self.progress_var.set(self.progress_var.get() + 1)
+        print(self.progress_var.get())
 
     def submit(self):
         try:
+            self.progress_var.set(0.0)
             self.model.save_csv(self.create_billing(self.date_var.get()))
         except Exception as e:
             messagebox.showerror('Error', e)
@@ -62,8 +68,8 @@ class Billing(top.Top):
             print(f'{row} has error : {e}\n')
 
     def extract_data(self):
+        messagebox.showinfo('Info', 'Choose the folder where the .xlsx files are')
         rootdir = filedialog.askdirectory(initialdir='./')
-        print(rootdir)
         if rootdir == '':
             raise Exception('No directory chosen')
         
@@ -87,6 +93,7 @@ class Billing(top.Top):
                 if load is not None and amount is not None:
                     emp[2][load] = amount
             
+            self.increment_progress()
             data.append(emp)
 
         return data
