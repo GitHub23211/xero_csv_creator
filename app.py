@@ -1,5 +1,4 @@
 from tkinter import Tk, Button
-from atexit import register
 
 from pages.billing import billing
 from pages.local import local
@@ -35,5 +34,4 @@ class App(Tk):
 if __name__ == '__main__':
     model = model.Model()
     app = App(model)
-    register(model.cleanup)
     app.mainloop()
