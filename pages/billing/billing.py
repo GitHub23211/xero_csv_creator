@@ -13,11 +13,11 @@ class Billing(top.Top):
         self.prices = self.model.billing
         self.date_var = StringVar(value='')
         self.progress_var = DoubleVar(value=0.0)
+        self.max_prog_var = DoubleVar(value=0.0)
         self.curr_view.build()
     
-    def increment_progress(self):
-        self.progress_var.set(self.progress_var.get() + 1)
-        print(self.progress_var.get())
+    def increment_progress(self, val):
+        self.progress_var.set(val)
 
     def submit(self):
         try:
@@ -81,8 +81,8 @@ class Billing(top.Top):
             for file in files:
                 if regex.match(file):
                     spreadsheets.append(file)
-
-        for spreadsheet in spreadsheets:
+        
+        for i, spreadsheet in enumerate(spreadsheets):
             wb = excel.load_workbook(f'{rootdir}/{spreadsheet}', data_only=True)
             sheets = wb.sheetnames
             latest = wb[sheets[len(sheets) - 1]]
@@ -93,7 +93,8 @@ class Billing(top.Top):
                 if load is not None and amount is not None:
                     emp[2][load] = amount
             
-            self.increment_progress()
+            self.increment_progress(100*((i+1)/len(spreadsheets)))
+            self.update()
             data.append(emp)
 
         return data
