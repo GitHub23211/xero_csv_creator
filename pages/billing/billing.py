@@ -18,14 +18,14 @@ class Billing(top.Top):
         try:
             self.model.save_csv(self.create_billing(self.date_var.get()))
         except Exception as e:
-            messagebox.showerror('Error', f'Please enter a valid date {e}')
+            messagebox.showerror('Error', e)
 
     def create_billing(self, date):
         try:
-            data = self.extract_data()
             bill_date = datetime.strptime(date, '%d/%m/%y')
             due_date = bill_date + timedelta(10)
             billing = [["*ContactName", "*InvoiceNumber", "*InvoiceDate", "*DueDate", "InventoryItemCode", "*Description", "*Quantity", "*UnitAmount", "*AccountCode", "*TaxType"]]
+            data = self.extract_data()
             for emp in data:
                 name = emp[0]
                 bill_ref = emp[1]
@@ -37,6 +37,8 @@ class Billing(top.Top):
                     row_to_add = [name, bill_ref, bill_date.strftime('%d/%m/%y'), due_date.strftime('%d/%m/%y'), item_code, description, num_loads, price, '160', 'BAS Excluded']
                     billing.append(row_to_add)
             return billing
+        except ValueError as e:
+            raise Exception('Please enter a valid date')
         except Exception as e:
             raise e
         
@@ -61,6 +63,10 @@ class Billing(top.Top):
 
     def extract_data(self):
         rootdir = filedialog.askdirectory(initialdir='./')
+        print(rootdir)
+        if rootdir == '':
+            raise Exception('No directory chosen')
+        
         regex = compile('.*xlsx$')
         spreadsheets = []
         data = []
