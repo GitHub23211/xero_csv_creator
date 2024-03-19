@@ -1,9 +1,8 @@
-.env
-*/__pycache__
-/__pycache__
+**/*
 *.csv
 *.json
 *.ipynb
-/build
-/dist
 *.spec
+*.bat
+!/pages
+!/components
