@@ -2,7 +2,7 @@ from tkinter import DoubleVar, StringVar, messagebox, filedialog
 from datetime import datetime, timedelta
 import openpyxl as excel
 from re import compile
-from os import walk
+from os import listdir
 
 from components import top
 from pages.billing import b_ui
@@ -12,7 +12,7 @@ class Billing(top.Top):
         top.Top.__init__(self, root, model, b_ui.billingUI, width, height, close_func)
         self.prices = self.model.billing
         self.date_var = StringVar(value='')
-        self.prog_lbl_var = StringVar(value='Progress:')
+        self.prog_lbl_var = StringVar(value='Ready')
         self.prog_var = DoubleVar(value=0.0)
         self.max_prog_var = DoubleVar(value=0.0)
         self.curr_view.build()
@@ -81,14 +81,17 @@ class Billing(top.Top):
         
         regex = compile('.*xlsx$')
         spreadsheets = []
+        files = listdir(rootdir)
+
+        for file in files:
+            if regex.match(file):
+                spreadsheets.append(file)
+        if len(spreadsheets) == 0:
+            raise Exception('No Excel files found in that directory.')
+
         data = []
         self.prog_lbl_var.set('Creating billing...')
 
-        for root, dis, files in walk(rootdir):
-            for file in files:
-                if regex.match(file):
-                    spreadsheets.append(file)
-        
         for i, spreadsheet in enumerate(spreadsheets):
             wb = excel.load_workbook(f'{rootdir}/{spreadsheet}', data_only=True)
             sheets = wb.sheetnames
