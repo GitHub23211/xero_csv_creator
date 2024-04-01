@@ -9,6 +9,8 @@ from dotenv import load_dotenv
 from components import top
 from pages.local import inv_info, add_local
 
+MAN_NUM_LENGTH = 7
+
 class Local(top.Top):
     def __init__(self, root, model, width, height, close_func):
         top.Top.__init__(self, root, model, inv_info.invoiceInfo, width, height, close_func)
@@ -23,18 +25,20 @@ class Local(top.Top):
         self.lbox = None
         self.lbox_index = -1
         self.load_info = []
+        self.entered_man_nums = set()
         self.loaded_check = None
         self.loaded = BooleanVar(value=False)
         self.curr_view.build()
 
     def nav_add_manifests(self, date, num):
-        if(date != '' and num != ''):
-            self.inv_date = date
-            self.inv_num = num
-            self.switch_view(add_local.AddLocal)
-            self.curr_view.build()
-        else:
+        if date == '' or num == '':
             messagebox.showerror('Error', 'Please enter an invoice date and number')
+            return
+
+        self.inv_date = date
+        self.inv_num = num
+        self.switch_view(add_local.AddLocal)
+        self.curr_view.build()
 
     def save_csv(self):
         self.model.save_csv(self.add_reference())
@@ -62,35 +66,44 @@ class Local(top.Top):
     def add_manifest(self):
         store_nums = [x for x in filter(lambda x : x.get() != '', self.load_info)]
         man_num = self.man_num_ent.get()
-        if len(man_num) != 7:
-            raise Exception('Manifest number format wrong')
+
+        if len(man_num) != MAN_NUM_LENGTH:
+            raise Exception('Invalid manifest number')
+        if man_num in self.entered_man_nums:
+            raise Exception('Manifest number has already been entered')
+        if len(store_nums) <= 0:
+            raise Exception('No store numbers entered')
+        
+        try:
+            loads = [self.pricing[x.get()] for x in store_nums]
+        except Exception as e:
+            raise Exception(f'Store number {e} does not exist')
+
+        loads.sort(key=itemgetter(2), reverse=True)
         index = self.lbox_index
-        if len(store_nums) > 0:
-            try:
-                loads = [self.pricing[x.get()] for x in store_nums]
-                loads.sort(key=itemgetter(2), reverse=True)
-                for i in range(0, len(loads)):
-                    #Generate fixed columns
-                    row_to_add = self.generate_fixed_info()
+        for i in range(0, len(loads)):
+            #Generate fixed columns
+            row_to_add = self.generate_fixed_info()
 
-                    #Inventory Code
-                    row_to_add.insert(4, 'AD-PRIM' if i == 0 and man_num else 'DROP-RATE')
+            #Inventory Code
+            row_to_add.insert(4, 'AD-PRIM' if i == 0 and man_num else 'DROP-RATE')
 
-                    #Description
-                    row_to_add.insert(5, f'{self.man_date_ent.get()} - {loads[i][0]} - {loads[i][1]}{f" - {man_num}" if i == 0 and man_num else ""}')
+            #Description
+            self.entered_man_nums.add(man_num)
+            row_to_add.insert(5, f'{self.man_date_ent.get()} - {loads[i][0]} - {loads[i][1]}{f" - {man_num}" if i == 0 and man_num else ""}')
 
-                    #UnitAmount i.e. Price
-                    row_to_add.insert(7, loads[i][2] if i == 0 and man_num else '50')
+            #UnitAmount i.e. Price
+            row_to_add.insert(7, loads[i][2] if i == 0 and man_num else '50')
 
-                    self.invoice.append(row_to_add) if index == -1 else self.invoice.insert(index, row_to_add)
-                if self.loaded.get():
-                    allowance = self.generate_fixed_info()
-                    allowance.insert(4, self.pricing['ALLWNCE'][0])
-                    allowance.insert(5, self.pricing['ALLWNCE'][1])
-                    allowance.insert(7, self.pricing['ALLWNCE'][2])
-                    self.invoice.append(allowance) if index == -1 else self.invoice.insert(index+1, allowance)
-            except Exception as e:
-                raise e
+            self.invoice.append(row_to_add) if index == -1 else self.invoice.insert(index, row_to_add)
+
+        if self.loaded.get():
+            allowance = self.generate_fixed_info()
+            allowance.insert(4, self.pricing['ALLWNCE'][0])
+            allowance.insert(5, self.pricing['ALLWNCE'][1])
+            allowance.insert(7, self.pricing['ALLWNCE'][2])
+            self.invoice.append(allowance) if index == -1 else self.invoice.insert(index+1, allowance)
+ 
             
     def append_manifest(self, event=None):
         try:
@@ -108,15 +121,19 @@ class Local(top.Top):
             messagebox.showerror('Error', f'Store number {e} does not exist')
         
     def update_added_manifests(self):
-        self.add_manifest()
-        manifests = self.invoice
-        show_manifests = [f'{manifests[i][5]} - ${manifests[i][7]}' for i in range(1, len(manifests))]
-        self.man_var.set(show_manifests)
+        try:
+            self.add_manifest()
+            manifests = self.invoice
+            show_manifests = [f'{manifests[i][5]} - ${manifests[i][7]}' for i in range(1, len(manifests))]
+            self.man_var.set(show_manifests)
+        except Exception as e:
+            messagebox.showerror('Error', e)
 
     def delete_manifest(self):
         manifests = self.invoice
         if len(manifests) > 1:
-            manifests.pop()
+            deleted_man_num = manifests.pop()[5][-MAN_NUM_LENGTH:]
+            self.entered_man_nums.discard(deleted_man_num)
             show_manifests = [f'{manifests[i][5]} - ${manifests[i][7]}' for i in range(1, len(manifests))]
             self.man_var.set(show_manifests)
 
