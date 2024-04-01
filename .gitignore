@@ -1,8 +1,11 @@
-**/*
+/**
+!src/
+!src/**
+__pycache__/
+
 *.csv
 *.json
 *.ipynb
 *.spec
 *.bat
-!/pages
-!/components
+*.env
