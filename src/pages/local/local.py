@@ -110,15 +110,17 @@ class Local(top.Top):
             self.update_added_manifests()
             for i in range(0, 3):
                 self.load_info[i].delete(0, 'end')
-            self.man_num_ent.delete(0, 'end')
-            self.lbox.select_clear('active', 'end')
-            self.lbox_index = -1
-            self.lbox.yview_moveto(1)
-            if self.loaded.get():
-                self.loaded_check.invoke()
-            self.man_num_ent.focus()
+                self.man_num_ent.delete(0, 'end')
+                self.lbox.select_clear('active', 'end')
+                self.lbox_index = -1
+                self.lbox.yview_moveto(1)
+                if self.loaded.get():
+                    self.loaded_check.invoke()
         except Exception as e:
-            messagebox.showerror('Error', f'Store number {e} does not exist')
+            messagebox.showerror('Error', e)
+        finally:
+            self.focus()
+            self.man_num_ent.focus()
         
     def update_added_manifests(self):
         try:
@@ -127,7 +129,7 @@ class Local(top.Top):
             show_manifests = [f'{manifests[i][5]} - ${manifests[i][7]}' for i in range(1, len(manifests))]
             self.man_var.set(show_manifests)
         except Exception as e:
-            messagebox.showerror('Error', e)
+           raise e
 
     def delete_manifest(self):
         manifests = self.invoice
