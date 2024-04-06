@@ -57,7 +57,7 @@ class Local(top.Top):
         while not result:
             result = search(regex, invoice[i][5])
             i = i - 1
-        return
+        return result
         
 
     def generate_fixed_info(self):
