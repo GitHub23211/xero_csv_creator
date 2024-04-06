@@ -78,7 +78,6 @@ class Local(top.Top):
             self.load_info[i].delete(0, 'end')
 
         self.man_num_ent.delete(0, 'end')
-        self.lbox.select_clear('active', 'end')
         self.lbox.yview_moveto(1)
 
         if self.loaded.get():
