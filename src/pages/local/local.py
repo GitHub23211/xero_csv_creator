@@ -41,7 +41,10 @@ class Local(top.Top):
         self.curr_view.build()
 
     def save_csv(self):
-        self.model.save_csv(self.add_reference())
+        try:
+            self.model.save_csv(self.add_reference())
+        except Exception as e:
+            messagebox.showerror('Error', e)
     
     def add_reference(self):
         complete = deepcopy(self.invoice)
@@ -57,6 +60,8 @@ class Local(top.Top):
         while not result:
             result = search(regex, invoice[i][5])
             i = i - 1
+        if result is None:
+            raise Exception('Could not get the last manifest date')
         return result
         
 
