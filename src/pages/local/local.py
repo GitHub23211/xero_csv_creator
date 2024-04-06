@@ -95,7 +95,6 @@ class Local(top.Top):
             raise Exception(f'Store number {e} does not exist')
 
         loads.sort(key=itemgetter(2), reverse=True)
-        index = self.lbox_index
         for i in range(0, len(loads)):
             #Generate fixed columns
             row_to_add = self.generate_fixed_info()
@@ -110,14 +109,14 @@ class Local(top.Top):
             #UnitAmount i.e. Price
             row_to_add.insert(7, loads[i][2] if i == 0 and man_num else '50')
 
-            self.invoice.append(row_to_add) if index == -1 else self.invoice.insert(index, row_to_add)
+            self.invoice.append(row_to_add)
 
         if self.loaded.get():
             allowance = self.generate_fixed_info()
             allowance.insert(4, self.pricing['ALLWNCE'][0])
             allowance.insert(5, self.pricing['ALLWNCE'][1])
             allowance.insert(7, self.pricing['ALLWNCE'][2])
-            self.invoice.append(allowance) if index == -1 else self.invoice.insert(index+1, allowance)
+            self.invoice.append(allowance)
  
             
     def append_manifest(self, event=None):
@@ -153,10 +152,3 @@ class Local(top.Top):
             self.entered_man_nums.discard(deleted_man_num)
             show_manifests = [f'{manifests[i][5]} - ${manifests[i][7]}' for i in range(1, len(manifests))]
             self.man_var.set(show_manifests)
-
-    def update_lbox_index(self, event=None):
-        if self.lbox.curselection()[0] == self.lbox_index - 2:
-            self.lbox.select_clear('active', 'end')
-            self.lbox_index = -1
-        else:
-            self.lbox_index = -1 if len(self.lbox.curselection()) == 0 else self.lbox.curselection()[0] + 2

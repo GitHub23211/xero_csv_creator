@@ -63,8 +63,7 @@ class AddLocal(Frame):
         title_lbl = Label(frame, text='Added Manifests')
         title_lbl.grid(row=0, column=0)
 
-        self.master.lbox = Listbox(frame, width=50, listvariable=self.master.man_var, exportselection=0, takefocus=0, selectmode='extended')
-        self.master.lbox.bind('<<ListboxSelect>>', self.master.update_lbox_index)
+        self.master.lbox = Listbox(frame, width=50, listvariable=self.master.man_var, exportselection=0, takefocus=0, selectmode='browse')
 
         scroll = Scrollbar(frame, orient='vertical', command=self.master.lbox.yview)
         self.master.lbox.configure(yscrollcommand=scroll.set)
