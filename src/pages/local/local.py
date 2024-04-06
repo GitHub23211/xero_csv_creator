@@ -16,14 +16,13 @@ class Local(top.Top):
         top.Top.__init__(self, root, model, inv_info.invoiceInfo, width, height, close_func)
         load_dotenv()
         self.invoice = [["*ContactName", "*InvoiceNumber", "Reference", "*InvoiceDate", "*DueDate", "InventoryItemCode", "*Description", "*Quantity", "*UnitAmount", "*AccountCode", "*TaxType"]]
-        self.pricing = self.model.pricing
         self.inv_date = '1/1/1990'
         self.inv_num = '-1'
+        self.pricing = self.model.pricing
         self.man_var = StringVar(value=[])
         self.man_date_ent = None
         self.man_num_ent = None
         self.lbox = None
-        self.lbox_index = -1
         self.load_info = []
         self.entered_man_nums = set()
         self.loaded_check = None
@@ -64,6 +63,65 @@ class Local(top.Top):
             raise Exception('Could not get the last manifest date')
         return result
         
+    def add_manifest(self, event=None):
+        try:
+            self.update_added_manifests()
+            self.clear_entries()
+        except Exception as e:
+            messagebox.showerror('Error', e)
+        finally:
+            self.focus()
+            self.man_num_ent.focus()
+    
+    def clear_entries(self):
+        for i in range(0, 3):
+            self.load_info[i].delete(0, 'end')
+
+        self.man_num_ent.delete(0, 'end')
+        self.lbox.select_clear('active', 'end')
+        self.lbox.yview_moveto(1)
+
+        if self.loaded.get():
+            self.loaded_check.invoke()
+            
+    def update_added_manifests(self):
+        try:
+            self.append_to_invoice()
+            manifests = self.invoice
+            show_manifests = [f'{manifests[i][5]} - ${manifests[i][7]}' for i in range(1, len(manifests))]
+            self.man_var.set(show_manifests)
+        except Exception as e:
+           raise e
+        
+    def append_to_invoice(self):
+        store_nums = [x for x in filter(lambda x : x.get() != '', self.load_info)]
+        man_num = self.man_num_ent.get()
+
+        if len(man_num) != MAN_NUM_LENGTH:
+            raise Exception('Invalid manifest number')
+        if man_num in self.entered_man_nums:
+            raise Exception('Manifest number has already been entered')
+        if len(store_nums) <= 0:
+            raise Exception('No store numbers entered')
+
+        try:
+            loads = [self.pricing[x.get()] for x in store_nums]
+        except Exception as e:
+            raise Exception(f'Store number {e} does not exist')
+
+        loads.sort(key=itemgetter(2), reverse=True)
+        for i in range(0, len(loads)):
+            self.invoice.append(self.append_manifest(man_num, loads, i))
+
+        if self.loaded.get():
+            self.invoice.append(self.append_allowance())
+    
+    def append_allowance(self):
+        allowance = self.generate_fixed_info()
+        allowance.insert(4, self.pricing['ALLWNCE'][0])
+        allowance.insert(5, self.pricing['ALLWNCE'][1])
+        allowance.insert(7, self.pricing['ALLWNCE'][2])
+        return allowance
 
     def generate_fixed_info(self):
         now = datetime.strptime(self.inv_date, '%d/%m/%y')
@@ -78,72 +136,21 @@ class Local(top.Top):
                 getenv('TAX')
             ]
 
-    def add_manifest(self):
-        store_nums = [x for x in filter(lambda x : x.get() != '', self.load_info)]
-        man_num = self.man_num_ent.get()
+    def append_manifest(self, man_num, loads, i):
+        #Generate fixed columns
+        row_to_add = self.generate_fixed_info()
 
-        if len(man_num) != MAN_NUM_LENGTH:
-            raise Exception('Invalid manifest number')
-        if man_num in self.entered_man_nums:
-            raise Exception('Manifest number has already been entered')
-        if len(store_nums) <= 0:
-            raise Exception('No store numbers entered')
-        
-        try:
-            loads = [self.pricing[x.get()] for x in store_nums]
-        except Exception as e:
-            raise Exception(f'Store number {e} does not exist')
+        #Inventory Code
+        row_to_add.insert(4, 'AD-PRIM' if i == 0 and man_num else 'DROP-RATE')
 
-        loads.sort(key=itemgetter(2), reverse=True)
-        for i in range(0, len(loads)):
-            #Generate fixed columns
-            row_to_add = self.generate_fixed_info()
+        #Description
+        self.entered_man_nums.add(man_num)
+        row_to_add.insert(5, f'{self.man_date_ent.get()} - {loads[i][0]} - {loads[i][1]}{f" - {man_num}" if i == 0 and man_num else ""}')
 
-            #Inventory Code
-            row_to_add.insert(4, 'AD-PRIM' if i == 0 and man_num else 'DROP-RATE')
+        #UnitAmount i.e. Price
+        row_to_add.insert(7, loads[i][2] if i == 0 and man_num else '50')
 
-            #Description
-            self.entered_man_nums.add(man_num)
-            row_to_add.insert(5, f'{self.man_date_ent.get()} - {loads[i][0]} - {loads[i][1]}{f" - {man_num}" if i == 0 and man_num else ""}')
-
-            #UnitAmount i.e. Price
-            row_to_add.insert(7, loads[i][2] if i == 0 and man_num else '50')
-
-            self.invoice.append(row_to_add)
-
-        if self.loaded.get():
-            allowance = self.generate_fixed_info()
-            allowance.insert(4, self.pricing['ALLWNCE'][0])
-            allowance.insert(5, self.pricing['ALLWNCE'][1])
-            allowance.insert(7, self.pricing['ALLWNCE'][2])
-            self.invoice.append(allowance)
- 
-            
-    def append_manifest(self, event=None):
-        try:
-            self.update_added_manifests()
-            for i in range(0, 3):
-                self.load_info[i].delete(0, 'end')
-                self.man_num_ent.delete(0, 'end')
-                self.lbox.select_clear('active', 'end')
-                self.lbox_index = -1
-                self.lbox.yview_moveto(1)
-                if self.loaded.get():
-                    self.loaded_check.invoke()
-        except Exception as e:
-            messagebox.showerror('Error', e)
-        finally:
-            self.focus()
-            self.man_num_ent.focus()
-        
-    def update_added_manifests(self):
-        try:
-            self.add_manifest()
-            manifests = self.invoice
-            show_manifests = [f'{manifests[i][5]} - ${manifests[i][7]}' for i in range(1, len(manifests))]
-            self.man_var.set(show_manifests)
-        except Exception as e:
-           raise e
+        return row_to_add
 
     def delete_manifest(self):
         manifests = self.invoice
