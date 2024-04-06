@@ -63,7 +63,8 @@ class AddLocal(Frame):
         title_lbl = Label(frame, text='Added Manifests')
         title_lbl.grid(row=0, column=0)
 
-        self.master.lbox = Listbox(frame, width=50, listvariable=self.master.man_var, exportselection=0, takefocus=0, selectmode='browse')
+        self.master.lbox = Listbox(frame, width=50, listvariable=self.master.man_var, exportselection=0, takefocus=0, selectmode='browse', font=('Segoe UI', 13))
+        self.master.lbox.bind('<FocusOut>', lambda e: self.master.lbox.selection_clear(0, 'end'))
 
         scroll = Scrollbar(frame, orient='vertical', command=self.master.lbox.yview)
         self.master.lbox.configure(yscrollcommand=scroll.set)
