@@ -45,10 +45,20 @@ class Local(top.Top):
     
     def add_reference(self):
         complete = deepcopy(self.invoice)
-        last_man_date = search('[0-9]{1,2}/[0-9]{1,2}/[0-9]{2}', complete[-1][5])
+        last_man_date = self.find_last_man(complete)
         for i in range(1, len(complete)):
             complete[i].insert(2, f"LOCAL: {self.inv_date}-{last_man_date.group(0)}")
         return complete
+
+    def find_last_man(self, invoice): 
+        regex = '[0-9]{1,2}/[0-9]{1,2}/[0-9]{2}'
+        result = None
+        i = -1
+        while not result:
+            result = search(regex, invoice[i][5])
+            i = i - 1
+        return
+        
 
     def generate_fixed_info(self):
         now = datetime.strptime(self.inv_date, '%d/%m/%y')
