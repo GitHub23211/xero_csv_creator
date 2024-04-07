@@ -19,13 +19,13 @@ class App(Tk):
         l_tab.place(relx=0.5, rely=0.3, anchor='center', relwidth=0.5)
         b_tab.place(relx=0.5, rely=0.6, anchor='center', relwidth=0.5)
 
-    def open_window(self, window, btn, width, height):
-        def on_win_close(win, btn):
-            btn.config(state='normal')
-            win.destroy()
-            
+    def open_window(self, window, btn, width, height):            
         btn.config(state='disabled')
-        win = window(self, self.model, width, height, lambda: on_win_close(win, btn))
+        win = window(self, self.model, width, height, lambda: self.on_win_close(win, btn))
+    
+    def on_win_close(self, win, btn):
+        btn.config(state='normal')
+        win.destroy()
 
 if __name__ == '__main__':
     model = model.Model()
