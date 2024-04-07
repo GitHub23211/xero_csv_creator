@@ -44,7 +44,7 @@ class invoiceInfo(Frame):
         date_ent.grid(row=0, column=1)
         num_ent.grid(row=2, column=1)
 
-        man_page_btn = ttk.Button(frame, text='Start Adding Manifests', command=lambda : self.master.nav_add_manifests(date_ent.get(), num_ent.get()))
+        man_page_btn = ttk.Button(frame, text='Start Adding Manifests', command=lambda : self.master.navigate_add_manifests(date_ent.get(), num_ent.get()))
         man_page_btn.grid(row=3, column=0)
         man_page_btn.state(['disabled'])
 

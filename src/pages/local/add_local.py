@@ -20,7 +20,7 @@ class AddLocal(Frame):
 
         self.master.man_date_ent = Entry(master=frame)
         self.master.man_date_ent.grid(row=1, column=0, padx=5)
-        self.master.man_date_ent.insert(0, self.master.inv_date)
+        self.master.man_date_ent.insert(0, self.master.get_inv_date())
 
         self.master.man_num_ent = Entry(master=frame)
         self.master.man_num_ent.grid(row=1, column=1, padx=5)
@@ -29,15 +29,15 @@ class AddLocal(Frame):
         frame = Frame(self)
         frame.grid(row=1, column=0)
 
-        self.master.loaded_check = Checkbutton(frame, text='Loaded by driver?', variable=self.master.loaded, takefocus=0)
-        self.master.loaded_check.grid(row=0, column=1)
+        self.master.loaded_checkbox_widget = Checkbutton(frame, text='Loaded by driver?', variable=self.master.loaded, takefocus=0)
+        self.master.loaded_checkbox_widget.grid(row=0, column=1)
 
         Label(frame, text="Store Number").grid(row=1, column=0)
 
         for i in range(2, 5):
             str_no_ent = Entry(frame)
             str_no_ent.grid(row=i, column=0)
-            self.master.load_info.append(str_no_ent)
+            self.master.stores_nums.append(str_no_ent)
         
         add_ent_btn = Button(frame, text="Add Manifest", command=self.master.add_manifest, takefocus=0)
         add_ent_btn.grid(row=2, column=1, padx=20, sticky=('e', 'w'))
