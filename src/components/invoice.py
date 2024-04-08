@@ -8,14 +8,14 @@ from datetime import datetime, timedelta
 MAN_NUM_LENGTH = 7
 
 class Invoice:
-    def __init__(self, prices):
+    def __init__(self, pricing):
         load_dotenv()
         self.invoice = [["*ContactName", "*InvoiceNumber", "Reference", "*InvoiceDate", "*DueDate", "InventoryItemCode", "*Description", "*Quantity", "*UnitAmount", "*AccountCode", "*TaxType"]]
         self.inv_date = '1/1/1990'
         self.inv_num = '-1'
         self.send_date = ''
         self.due_date = ''
-        self.prices = prices
+        self.prices = pricing
         self.entered_man_nums = set()
     
     def set_date_num(self, date, num):
