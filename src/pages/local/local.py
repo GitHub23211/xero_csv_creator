@@ -6,13 +6,12 @@ class Local(top.Top):
     def __init__(self, root, model, width, height, close_func):
         top.Top.__init__(self, root, model, inv_info.invoiceInfo, width, height, close_func)
         self.invoice = invoice.Invoice(self.model.pricing)
-        self.man_date_ent = None
-        self.man_num_ent = None
-        self.loaded_checkbox_widget = None
-        self.lbox = None
-        self.stores_nums = []
-        self.man_var = StringVar(value=[])
+        self.man_date_var = StringVar(value='')
+        self.man_num_var = StringVar(value='')
+        self.man_list = StringVar(value=[])
         self.loaded = BooleanVar(value=False)
+        self.stores_nums = []
+        self.bind('<Return>', self.add_manifest)
         self.curr_view.build()
 
     def navigate_add_manifests(self, date, num):
@@ -21,6 +20,7 @@ class Local(top.Top):
             return
         
         self.invoice.set_date_num(date, num)
+        self.man_date_var.set(self.invoice.get_inv_date())
         self.switch_view(add_local.AddLocal)
         self.curr_view.build()
     
@@ -30,20 +30,17 @@ class Local(top.Top):
         except Exception as e:
             messagebox.showerror('Error', e)
     
-    def add_manifest(self, event=None):
+    def add_manifest(self):
         try:
             self.update_invoice()
-            self.clear_widgets()
+            self.reset_widgets()
         except Exception as e:
             messagebox.showerror('Error', e)
-        finally:
-            self.focus()
-            self.man_num_ent.focus()
         
-    def update_invoice(self, event=None):
+    def update_invoice(self):
         stores = [x for x in filter(lambda x : x.get() != '', self.stores_nums)]
-        man_num = self.man_num_ent.get()
-        man_date = self.man_date_ent.get()
+        man_num = self.man_num_var.get()
+        man_date = self.man_date_var.get()
 
         try:
             self.invoice.append_manifest(man_num, man_date, stores, self.loaded.get())
@@ -51,23 +48,16 @@ class Local(top.Top):
         except Exception as e:
             raise e
 
-    def clear_widgets(self):
+    def reset_widgets(self):
         for i in range(0, 3):
             self.stores_nums[i].delete(0, 'end')
+        self.man_num_var.set('')
+        self.loaded.set(False)
 
-        self.man_num_ent.delete(0, 'end')
-        self.lbox.yview_moveto(1)
-
-        if self.loaded.get():
-            self.loaded_checkbox_widget.invoke()
-        
     def delete_manifest(self):
         self.invoice.delete_manifest()
         self.update_lbox_contents(self.invoice.get_invoice())
     
     def update_lbox_contents(self, invoice):
         show_manifests = [f'{invoice[i][5]} - ${invoice[i][7]}' for i in range(1, len(invoice))]
-        self.man_var.set(show_manifests)
-    
-    def get_inv_date(self):
-        return self.invoice.get_inv_date()
+        self.man_list.set(show_manifests)
