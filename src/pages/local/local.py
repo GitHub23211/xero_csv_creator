@@ -11,7 +11,6 @@ class Local(top.Top):
         self.man_list = StringVar(value=[])
         self.loaded = BooleanVar(value=False)
         self.stores_nums = []
-        self.bind('<Return>', self.add_manifest)
         self.curr_view.build()
 
     def navigate_add_manifests(self, date, num):

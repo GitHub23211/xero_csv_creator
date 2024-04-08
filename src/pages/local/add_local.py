@@ -11,6 +11,7 @@ class AddLocal(Frame):
         self.manifest_input()
         self.store_input()
         self.added_manifests()
+        self.master.bind('<Return>', self.add_manifest)
 
     def manifest_input(self):
         f = Frame(self)
@@ -23,7 +24,6 @@ class AddLocal(Frame):
         self.man_num_ent = Entry(master=f, textvariable=self.master.man_num_var)
         self.man_num_ent.grid(row=1, column=1, padx=5)
         self.man_num_ent.focus()
-        
 
     def store_input(self):
         f = Frame(self)
