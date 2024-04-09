@@ -1,11 +1,13 @@
 from tkinter import StringVar, BooleanVar, messagebox
-from components import top, invoice
-from pages.local import inv_info, add_local
+from inv_info import InvoiceInfo
+from add_local import AddLocal
+from components.top import Top
+from components.invoice import Invoice
 
-class Local(top.Top):
+class Local(Top):
     def __init__(self, root, model, width, height, close_func):
-        top.Top.__init__(self, root, model, inv_info.invoiceInfo, width, height, close_func)
-        self.invoice = invoice.Invoice(self.model.pricing)
+        Top.__init__(self, root, model, InvoiceInfo, width, height, close_func)
+        self.invoice = Invoice(self.model.pricing)
         self.man_date_var = StringVar(value='')
         self.man_num_var = StringVar(value='')
         self.man_list = StringVar(value=[])
@@ -20,7 +22,7 @@ class Local(top.Top):
         
         self.invoice.set_date_num(date, num)
         self.man_date_var.set(self.invoice.get_inv_date())
-        self.switch_view(add_local.AddLocal)
+        self.switch_view(AddLocal)
         self.curr_view.build()
     
     def save_csv(self):

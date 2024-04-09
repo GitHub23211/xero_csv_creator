@@ -4,12 +4,12 @@ import openpyxl as excel
 from re import compile
 from os import listdir
 
-from components import top
-from pages.billing import b_ui
+from components.top import Top
+from b_ui import billingUI
 
-class Billing(top.Top):
+class Billing(Top):
     def __init__(self, root, model, width, height, close_func):
-        top.Top.__init__(self, root, model, b_ui.billingUI, width, height, close_func)
+        Top.__init__(self, root, model, billingUI, width, height, close_func)
         self.prices = self.model.billing
         self.date_var = StringVar(value='')
         self.prog_lbl_var = StringVar(value='Ready')
