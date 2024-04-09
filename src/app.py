@@ -10,7 +10,7 @@ class App(Tk):
         self.maxsize(200, 130)
         self.title("Xero Invoice Creator")
         self.model = model
-        self.protocol("WM_DELETE_WINDOW", self.model.cleanup)
+        self.protocol("WM_DELETE_WINDOW", self.cleanup)
         self.create_menu()
 
     def create_menu(self):
@@ -27,6 +27,10 @@ class App(Tk):
     def on_win_close(self, win, btn):
         btn.config(state='normal')
         win.destroy()
+    
+    def cleanup(self):
+        self.model.cleanup()
+        self.destroy()
 
 if __name__ == '__main__':
     model = model.Model()
