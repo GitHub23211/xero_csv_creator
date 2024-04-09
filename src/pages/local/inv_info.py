@@ -1,7 +1,7 @@
 from tkinter import Frame, Label, Entry, ttk, StringVar
 from re import match, fullmatch
 
-class invoiceInfo(Frame):
+class InvoiceInfo(Frame):
     def __init__(self, root):
          Frame.__init__(self, root)
 
