@@ -5,7 +5,7 @@ from re import compile
 from os import listdir
 
 from components.top import Top
-from b_ui import billingUI
+from .b_ui import billingUI
 
 class Billing(Top):
     def __init__(self, root, model, width, height, close_func):
