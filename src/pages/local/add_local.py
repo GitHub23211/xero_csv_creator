@@ -1,69 +1,70 @@
-from tkinter import Frame, Entry, Button, Label, Listbox, Scrollbar, Checkbutton
+from tkinter import Frame, messagebox
+
+from .components.man_info_input import ManInfoInput
+from .components.store_nums_input import StoreNumsInput
+from .components.man_list import ManList
 
 class AddLocal(Frame):
     def __init__(self, root):
         Frame.__init__(self, root)
-        self.man_num_ent = None
-        self.lbox = None
-    
-    def build(self):
-        self.grid()
-        self.manifest_input()
-        self.store_input()
-        self.added_manifests()
+        self.man_info_input = ManInfoInput(self)
+        self.man_list = ManList(self)
+        self.store_nums_input = StoreNumsInput(self, self.get_button_commands())
         self.master.bind('<Return>', self.add_manifest)
-
-    def manifest_input(self):
-        f = Frame(self)
-        f.grid(row=0, column=0)
-
-        Label(master=f, text='Manifest Date').grid(row=0, column=0)
-        Label(master=f, text='Manifest Number').grid(row=0, column=1)
-        Entry(master=f, textvariable=self.master.man_date_var).grid(row=1, column=0, padx=5)
-
-        self.man_num_ent = Entry(master=f, textvariable=self.master.man_num_var)
-        self.man_num_ent.grid(row=1, column=1, padx=5)
-        self.man_num_ent.focus()
-
-    def store_input(self):
-        f = Frame(self)
-        f.grid(row=1, column=0)
-
-        loaded_checkbox = Checkbutton(f, text='Loaded by driver?', variable=self.master.loaded, takefocus=0)
-        loaded_checkbox.grid(row=0, column=1)
-
-        Label(f, text="Store Number").grid(row=1, column=0)
-
-        for i in range(2, 5):
-            str_no_ent = Entry(f)
-            str_no_ent.grid(row=i, column=0)
-            self.master.stores_nums.append(str_no_ent)
-        
-        add_ent_btn = Button(f, text="Add Manifest", command=self.add_manifest, takefocus=0)
-        add_ent_btn.grid(row=2, column=1, padx=20, sticky=('e', 'w'))
-
-        del_ent_btn = Button(f, text="Delete Last Entry", command=self.master.delete_manifest, takefocus=0)
-        del_ent_btn.grid(row=3, column=1, padx=20, sticky=('e', 'w'))
-
-        save_csv_btn = Button(f, text='Save CSV', command=self.master.save_csv, takefocus=0)
-        save_csv_btn.grid(row=4, column=1, padx=20, sticky=('e', 'w'))
-
-    def added_manifests(self):
-        f = Frame(self)
-        f.grid(row=2, column=0, pady=10)
-
-        Label(f, text='Added Manifests').grid(row=0, column=0)
-
-        self.lbox = Listbox(f, width=55, listvariable=self.master.man_list, exportselection=0, takefocus=0, selectmode='browse', font=('Segoe UI', 13))
-        self.lbox.bind('<FocusOut>', lambda e: self.lbox.selection_clear(0, 'end'))
-
-        scroll = Scrollbar(f, orient='vertical', command=self.lbox.yview)
-        self.lbox.configure(yscrollcommand=scroll.set)
-
-        self.lbox.grid(row=1, column=0, sticky='e')
-        scroll.grid(row=1, column=1, sticky=('n', 's'))
+        self.set_date()
     
     def add_manifest(self, event=None):
-        self.master.add_manifest()
-        self.man_num_ent.focus()
-        self.lbox.yview_moveto(1)
+        man_num = self.man_info_input.get_man_num()
+        man_date = self.man_info_input.get_man_date()
+        store_nums = self.store_nums_input.get_store_nums()
+        loaded = self.store_nums_input.get_loaded()
+        
+        try:
+            self.master.add_manifest(man_num, man_date, store_nums, loaded)
+            self.update_lbox_contents()
+            self.reset_widgets()
+        except Exception as e:
+            self.show_error(e)
+
+    def save_csv(self):
+        try:
+            self.master.save_csv()
+        except Exception as e:
+            self.show_error(e)
+    
+    def get_button_commands(self):
+        add = self.add_manifest
+        delete = self.master.delete_manifest
+        save = self.master.save_csv
+
+        return {
+            'add': add,
+            'delete': delete,
+            'save': save
+        }
+    
+    def set_date(self):
+        date = self.master.get_inv_date()
+        self.man_info_input.set_man_date(date)   
+    
+    def reset_widgets(self):
+        self.store_nums_input.reset_loaded()
+        self.store_nums_input.reset_store_nums()
+        self.man_info_input.reset_man_num()
+        self.man_info_input.return_focus()
+        self.man_list.reset_lbox()
+
+    def update_lbox_contents(self):
+        invoice = self.master.get_invoice()
+        show_manifests = [f'{invoice[i][5]} - ${invoice[i][7]}' for i in range(1, len(invoice))]
+        self.man_list.set_lbox(show_manifests)
+
+    def build(self):
+        self.grid()
+        self.man_info_input.build()
+        self.store_nums_input.build()
+        self.man_list.build()
+    
+    def show_error(self, e):
+        messagebox.showerror('Error', e)
+        self.man_info_input.return_focus()
