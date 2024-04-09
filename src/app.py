@@ -1,8 +1,8 @@
 from tkinter import Tk, Button
 
-from pages.billing import Billing
-from pages.local import Local
-from pages.stores import Stores
+from pages.billing.billing import Billing
+from pages.local.local import Local
+from pages.stores.stores import Stores
 import model
 
 class App(Tk):
