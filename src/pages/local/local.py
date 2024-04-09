@@ -4,8 +4,8 @@ from components.top import Top
 from components.invoice import Invoice
 
 class Local(Top):
-    def __init__(self, root, model, width, height, close_func):
-        Top.__init__(self, root, model, InvoiceInfo, width, height, close_func)
+    def __init__(self, root, model, width, height, close_win_handler):
+        Top.__init__(self, root, model, InvoiceInfo, width, height, close_win_handler)
         self.invoice = Invoice(self.model.pricing)
         self.curr_view.build()
 

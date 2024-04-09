@@ -8,8 +8,8 @@ from components.top import Top
 from .b_ui import billingUI
 
 class Billing(Top):
-    def __init__(self, root, model, width, height, close_func):
-        Top.__init__(self, root, model, billingUI, width, height, close_func)
+    def __init__(self, root, model, width, height, close_win_handler):
+        Top.__init__(self, root, model, billingUI, width, height, close_win_handler)
         self.prices = self.model.billing
         self.date_var = StringVar(value='')
         self.prog_lbl_var = StringVar(value='Ready')
