@@ -6,7 +6,7 @@ class billingUI(Frame):
 
     def build(self):
         self.master.columnconfigure(0, weight=1)
-        self.columnconfigure([i for i in range(0, 6)], weight=1)
+        self.columnconfigure('all', weight=1)
         self.grid()
         self.date()
         self.save_button()
