@@ -22,7 +22,7 @@ class Local(Top):
     
     def add_manifest(self, man_num, man_date, store_nums, loaded):
         stores = [x for x in filter(lambda x : x.get() != '', store_nums)]
-        self.invoice.append_manifest(man_num, man_date, stores, loaded)
+        return self.invoice.append_manifest(man_num, man_date, stores, loaded)
 
     def delete_manifest(self):
         self.invoice.delete_manifest()

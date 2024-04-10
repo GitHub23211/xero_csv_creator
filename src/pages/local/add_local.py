@@ -20,8 +20,8 @@ class AddLocal(Frame):
         loaded = self.store_nums_input.get_loaded()
         
         try:
-            self.master.add_manifest(man_num, man_date, store_nums, loaded)
-            self.update_lbox_contents()
+            num_added = self.master.add_manifest(man_num, man_date, store_nums, loaded)
+            self.update_list_view(num_added)
             self.reset_widgets()
         except Exception as e:
             self.show_error(e)
@@ -52,12 +52,11 @@ class AddLocal(Frame):
         self.store_nums_input.reset_store_nums()
         self.man_info_input.reset_man_num()
         self.man_info_input.return_focus()
-        self.man_list.reset_lbox()
+        self.man_list.reset_view()
 
-    def update_lbox_contents(self):
-        invoice = self.master.get_invoice()
-        show_manifests = [f'{invoice[i][5]} - ${invoice[i][7]}' for i in range(1, len(invoice))]
-        self.man_list.set_lbox(show_manifests)
+    def update_list_view(self, num_added):
+        latest_entries = self.master.get_invoice()[-num_added:]
+        self.man_list.update_view(latest_entries)
 
     def build(self):
         self.grid()

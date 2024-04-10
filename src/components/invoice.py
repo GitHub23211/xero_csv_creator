@@ -54,6 +54,8 @@ class Invoice:
 
         if loaded:
             self.append_allowance()
+            return len(loads) + 1
+        return len(loads)
 
     def append_store(self, man_num, man_date, loads, i):
         #Add to set of current manifest numbers
