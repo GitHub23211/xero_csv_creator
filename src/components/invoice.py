@@ -112,3 +112,6 @@ class Invoice:
     
     def get_inv_date(self):
         return self.inv_date
+    
+    def get_num_manifests(self):
+        return len(self.entered_man_nums)

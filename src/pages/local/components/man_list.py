@@ -1,11 +1,13 @@
-from tkinter import Frame, Label, Scrollbar, ttk
+from tkinter import Frame, Label, Scrollbar, IntVar, ttk
 
 class ManList:
     def __init__(self, root):
         self.root = root
+        self.num_manifests = IntVar(value=0)
         self.tree = None
     
-    def update_view(self, entries):
+    def update_view(self, entries, num_manifests):
+        self.num_manifests.set(num_manifests)
         for entry in entries:
             description = entry[5]
             price = entry[7]
@@ -13,6 +15,13 @@ class ManList:
 
     def reset_view(self):
         self.tree.yview_moveto(1)
+    
+    def build_title(self, f):
+        container = Frame(f)
+        container.grid(row=0, column=0)
+
+        Label(container, text='Added Manifests:').grid(row=0, column=0)
+        Label(container, textvariable=self.num_manifests).grid(row=0, column=1)
 
     def build_scrollbar(self, root):
         scroll = Scrollbar(root, orient='vertical', command=self.tree.yview)
@@ -42,6 +51,6 @@ class ManList:
         f = Frame(self.root)
         f.grid(pady=10)
 
-        Label(f, text='Added Manifests').grid(row=0, column=0)
         self.build_treeview(f)
         self.build_scrollbar(f)
+        self.build_title(f)

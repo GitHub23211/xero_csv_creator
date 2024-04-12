@@ -32,3 +32,6 @@ class Local(Top):
     
     def get_inv_date(self):
         return self.invoice.get_inv_date()
+
+    def get_num_manifests(self):
+        return self.invoice.get_num_manifests()

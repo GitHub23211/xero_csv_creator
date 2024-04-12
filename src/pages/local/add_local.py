@@ -56,7 +56,9 @@ class AddLocal(Frame):
 
     def update_list_view(self, num_added):
         latest_entries = self.master.get_invoice()[-num_added:]
-        self.man_list.update_view(latest_entries)
+        num_manifests = self.master.get_num_manifests()
+        
+        self.man_list.update_view(latest_entries, num_manifests)
 
     def build(self):
         self.grid()
