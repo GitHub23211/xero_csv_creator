@@ -13,9 +13,11 @@ class ManList:
             price = entry[7]
             self.tree.insert('', 'end', text='', values=(description, f'${price}'))
     
-    def delete_last_item(self, num_manifests):
+    def delete_last_item(self, num_manifests, num_added):
         children = self.tree.get_children()
-        self.tree.delete(children[len(children) - 1])
+        for n in range(num_added):
+            i = len(children) - n - 1
+            self.tree.delete(children[i])
         self.num_manifests.set(num_manifests)
 
     def reset_view(self):

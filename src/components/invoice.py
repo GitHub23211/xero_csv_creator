@@ -84,8 +84,11 @@ class Invoice:
 
         self.invoice.append(allowance)
 
-    def delete_manifest(self):
-        if len(self.invoice) > 1:
+    def delete_manifest(self, num_added):
+        if len(self.invoice) <= 1:
+            raise Exception('0 manifests have been added')
+        
+        for i in range(num_added):
             deleted_man_num = self.invoice.pop()[5][-MAN_NUM_LENGTH:]
             self.entered_man_nums.discard(deleted_man_num)
     

@@ -7,6 +7,7 @@ from .components.man_list import ManList
 class AddLocal(Frame):
     def __init__(self, root):
         Frame.__init__(self, root)
+        self.num_added = []
         self.man_info_input = ManInfoInput(self)
         self.man_list = ManList(self)
         self.store_nums_input = StoreNumsInput(self, self.get_button_commands())
@@ -20,15 +21,21 @@ class AddLocal(Frame):
         loaded = self.store_nums_input.get_loaded()
         
         try:
-            num_added = self.master.add_manifest(man_num, man_date, store_nums, loaded)
-            self.update_list_view(num_added)
+            self.num_added.append(self.master.add_manifest(man_num, man_date, store_nums, loaded))
+            self.update_list_view()
             self.reset_widgets()
         except Exception as e:
             self.show_error(e)
     
     def delete_manifest(self):
-        self.master.delete_manifest()
-        self.man_list.delete_last_item(self.master.get_num_manifests())
+        try:
+            last_num_added = self.num_added.pop()
+            self.master.delete_manifest(last_num_added)
+            
+            num_manifests = self.master.get_num_manifests()
+            self.man_list.delete_last_item(num_manifests, last_num_added)
+        except Exception as e:
+            self.show_error(e)
 
     def save_csv(self):
         try:
@@ -58,8 +65,9 @@ class AddLocal(Frame):
         self.man_info_input.return_focus()
         self.man_list.reset_view()
 
-    def update_list_view(self, num_added):
-        latest_entries = self.master.get_invoice()[-num_added:]
+    def update_list_view(self):
+        last_num_added = self.num_added[len(self.num_added) - 1]
+        latest_entries = self.master.get_invoice()[-last_num_added:]
         num_manifests = self.master.get_num_manifests()
         
         self.man_list.update_view(latest_entries, num_manifests)

@@ -24,8 +24,8 @@ class Local(Top):
         stores = [x for x in filter(lambda x : x.get() != '', store_nums)]
         return self.invoice.append_manifest(man_num, man_date, stores, loaded)
 
-    def delete_manifest(self):
-        self.invoice.delete_manifest()
+    def delete_manifest(self, num_added):
+        self.invoice.delete_manifest(num_added)
     
     def get_invoice(self):
         return self.invoice.get_invoice()
