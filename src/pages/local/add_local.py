@@ -25,6 +25,10 @@ class AddLocal(Frame):
             self.reset_widgets()
         except Exception as e:
             self.show_error(e)
+    
+    def delete_manifest(self):
+        self.master.delete_manifest()
+        self.man_list.delete_last_item(self.master.get_num_manifests())
 
     def save_csv(self):
         try:
@@ -34,8 +38,8 @@ class AddLocal(Frame):
     
     def get_button_commands(self):
         add = self.add_manifest
-        delete = self.master.delete_manifest
-        save = self.master.save_csv
+        delete = self.delete_manifest
+        save = self.save_csv
 
         return {
             'add': add,
