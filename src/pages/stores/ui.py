@@ -1,5 +1,4 @@
 from tkinter import Frame, Label, Scrollbar, ttk
-from .components.list_item import ListItem
 
 class UI(Frame):
     def __init__(self, root):
