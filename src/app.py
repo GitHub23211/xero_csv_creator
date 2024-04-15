@@ -10,13 +10,13 @@ class App(Tk):
         Tk.__init__(self)
         self.maxsize(200, 130)
         self.title("Xero Invoice Creator")
-        self.model = model
         self.protocol("WM_DELETE_WINDOW", self.cleanup)
+        self.model = model
         self.create_menu()
 
     def create_menu(self):
         local_btn = Button(self, text='Local Invoicing', command=lambda : self.open_window(Local, local_btn, 270, 350))
-        billing_btn = Button(self, text='Billing', command=lambda: self.open_window(Billing, billing_btn, 320, 190))
+        billing_btn = Button(self, text='Employee Pay', command=lambda: self.open_window(Billing, billing_btn, 320, 190))
         stores_btn = Button(self, text='Store Pricing', command=lambda: self.open_window(Stores, stores_btn, 400, 190))
 
         local_btn.place(relx=0.5, rely=0.25, anchor='center', relwidth=0.5)
