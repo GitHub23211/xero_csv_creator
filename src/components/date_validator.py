@@ -7,7 +7,7 @@ class DateValidator:
         self.regex = '[0-9]{1,2}/[0-9]{1,2}/[0-9]{2}'
     
     def validate(self, date):
-        if fullmatch(self.regex, date) is not None:
+        if fullmatch(self.regex, date) is None:
             return False
         return self.validate_date_range(date)
     
