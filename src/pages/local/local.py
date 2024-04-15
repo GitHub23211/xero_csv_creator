@@ -2,6 +2,7 @@ from .inv_info import InvoiceInfo
 from .add_local import AddLocal
 from components.top import Top
 from components.invoice import Invoice
+from components.date_validator import DateValidator
 
 class Local(Top):
     def __init__(self, root, model, width, height, close_win_handler):
@@ -12,6 +13,8 @@ class Local(Top):
     def navigate_add_manifests(self, date, num):
         if date == '' or num == '':
             raise Exception('Please enter an invoice date and number')
+        if not DateValidator().validate(date):
+            raise Exception('Date is invalid')
         
         self.invoice.set_date_num(date, num)
         self.switch_view(AddLocal)
