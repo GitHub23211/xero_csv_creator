@@ -23,9 +23,9 @@ class Local(Top):
     def save_csv(self):
         self.model.save_csv(self.invoice.get_completed())
     
-    def add_manifest(self, man_num, man_date, store_nums, loaded):
+    def add_manifest(self, man_num, man_date, trailer_num, store_nums, loaded):
         stores = [x for x in filter(lambda x : x.get() != '', store_nums)]
-        return self.invoice.append_manifest(man_num, man_date, stores, loaded)
+        return self.invoice.append_manifest(man_num, man_date, trailer_num, stores, loaded)
 
     def delete_manifest(self, num_added):
         self.invoice.delete_manifest(num_added)

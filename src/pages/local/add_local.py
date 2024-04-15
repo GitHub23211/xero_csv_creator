@@ -17,11 +17,12 @@ class AddLocal(Frame):
     def add_manifest(self, event=None):
         man_num = self.man_info_input.get_man_num()
         man_date = self.man_info_input.get_man_date()
+        trailer_num = self.man_info_input.get_trail_num()
         store_nums = self.store_nums_input.get_store_nums()
         loaded = self.store_nums_input.get_loaded()
         
         try:
-            self.num_added.append(self.master.add_manifest(man_num, man_date, store_nums, loaded))
+            self.num_added.append(self.master.add_manifest(man_num, man_date, trailer_num, store_nums, loaded))
             self.update_list_view()
             self.reset_widgets()
         except Exception as e:
@@ -61,7 +62,7 @@ class AddLocal(Frame):
     def reset_widgets(self):
         self.store_nums_input.reset_loaded()
         self.store_nums_input.reset_store_nums()
-        self.man_info_input.reset_man_num()
+        self.man_info_input.reset_nums()
         self.man_info_input.return_focus()
         self.man_list.reset_view()
 

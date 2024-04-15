@@ -20,20 +20,19 @@ class StoreNumsInput:
     def reset_loaded(self):
         self.loaded.set(False)
     
-    def build(self):
-        f = Frame(self.root)
-        f.grid()
-
+    def checkbox(self, f):
         loaded_checkbox = Checkbutton(f, text='Loaded by driver?', variable=self.loaded, takefocus=0)
-        loaded_checkbox.grid(row=0, column=1)
+        loaded_checkbox.grid(row=1, column=1)
 
+    def store_num_ent(self, f):
         Label(f, text="Store Number").grid(row=1, column=0)
 
         for i in range(2, 5):
             str_no_ent = Entry(f)
             str_no_ent.grid(row=i, column=0)
             self.store_nums.append(str_no_ent)
-        
+
+    def buttons(self, f):
         add_ent_btn = Button(f, text="Add Manifest", command=self.commands['add'], takefocus=0)
         add_ent_btn.grid(row=2, column=1, padx=20, sticky=('e', 'w'))
 
@@ -42,3 +41,14 @@ class StoreNumsInput:
 
         save_csv_btn = Button(f, text='Save CSV', command=self.commands['save'], takefocus=0)
         save_csv_btn.grid(row=4, column=1, padx=20, sticky=('e', 'w'))
+    
+    def build(self):
+        f = Frame(self.root)
+        f.grid(pady=10)
+        self.checkbox(f)
+        self.store_num_ent(f)
+        self.buttons(f)
+
+
+
+    

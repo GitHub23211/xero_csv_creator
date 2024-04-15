@@ -35,7 +35,7 @@ class Invoice:
                 getenv('TAX')
             ]
 
-    def append_manifest(self, man_num, man_date, stores, loaded):
+    def append_manifest(self, man_num, man_date, trailer_num, stores, loaded):
         if len(man_num) != MAN_NUM_LENGTH:
             raise Exception('Invalid manifest number')
         if man_num in self.entered_man_nums:
@@ -50,14 +50,14 @@ class Invoice:
 
         loads.sort(key=itemgetter(2), reverse=True)
         for i in range(0, len(loads)):
-            self.append_store(man_num, man_date, loads, i)
+            self.append_store(man_num, man_date, trailer_num, loads, i)
 
         if loaded:
             self.append_allowance()
             return len(loads) + 1
         return len(loads)
 
-    def append_store(self, man_num, man_date, loads, i):
+    def append_store(self, man_num, man_date, trailer_num, loads, i):
         #Add to set of current manifest numbers
         self.entered_man_nums.add(man_num)
 
@@ -65,13 +65,13 @@ class Invoice:
         row_to_add = self.generate_fixed_info()
 
         #Inventory Code
-        row_to_add.insert(4, 'AD-PRIM' if i == 0 and man_num else 'DROP-RATE')
+        row_to_add.insert(4, 'AD-PRIM' if i == 0 else 'DROP-RATE')
 
         #Description
-        row_to_add.insert(5, f'{man_date} - {loads[i][0]} - {loads[i][1]}{f" - {man_num}" if i == 0 and man_num else ""}')
+        row_to_add.insert(5, f'{man_date} - {loads[i][0]} - {loads[i][1]} {f"- {man_num}" if i == 0 else ""} {f"- {trailer_num}" if i == 0 and trailer_num else ""}')
 
         #UnitAmount i.e. Price
-        row_to_add.insert(7, loads[i][2] if i == 0 and man_num else '50')
+        row_to_add.insert(7, loads[i][2] if i == 0 else '50')
 
         self.invoice.append(row_to_add)
     
