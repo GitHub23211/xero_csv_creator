@@ -10,7 +10,6 @@ class App(Tk):
         Tk.__init__(self)
         self.maxsize(200, 130)
         self.title("Xero Invoice Creator")
-        self.protocol("WM_DELETE_WINDOW", self.cleanup)
         self.model = model
         self.create_menu()
 

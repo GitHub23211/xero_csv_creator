@@ -8,6 +8,7 @@ class Model:
         self.json_files = [open('./billing.json', mode='r'), open('./store_pricing.json', mode='r')]
         self.billing = load(self.json_files[0])
         self.pricing = load(self.json_files[1])
+        self.cleanup()
 
     def save_csv(self, data):
         dir = filedialog.asksaveasfilename(initialdir='./', filetypes=[('CSV files', '*.csv')], defaultextension='.csv')
