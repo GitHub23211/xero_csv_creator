@@ -85,12 +85,11 @@ class Invoice:
         self.invoice.append(allowance)
 
     def delete_manifest(self, num_added):
-        if len(self.invoice) <= 1:
-            raise Exception('0 manifests have been added')
-        
+        regex = '[0-9]{7}'        
         for i in range(num_added):
-            deleted_man_num = self.invoice.pop()[5][-MAN_NUM_LENGTH:]
-            self.entered_man_nums.discard(deleted_man_num)
+            deleted_man_num = search(regex, self.invoice.pop()[5])
+            if deleted_man_num is not None:
+                self.entered_man_nums.discard(deleted_man_num.group(0))
     
     def get_completed(self):
         complete = deepcopy(self.invoice)

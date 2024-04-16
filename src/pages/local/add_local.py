@@ -30,6 +30,9 @@ class AddLocal(Frame):
     
     def delete_manifest(self):
         try:
+            if len(self.master.get_invoice()) <= 1:
+                raise Exception('0 manifests have been added')
+            
             last_num_added = self.num_added.pop()
             self.master.delete_manifest(last_num_added)
             
