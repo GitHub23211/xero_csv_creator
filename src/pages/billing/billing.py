@@ -74,7 +74,7 @@ class Billing(Top):
             print(f'{row} has error : {e}\n')
 
     def extract_data(self):
-        messagebox.showinfo('Info', 'Choose the folder where the Excel files are')
+        messagebox.showinfo('Info', 'Select the folder that contains the employee tax invoices')
         rootdir = filedialog.askdirectory(initialdir='./')
         if rootdir == '':
             raise Exception('No directory chosen')
