@@ -31,6 +31,8 @@ class Billing(Top):
         except Exception as e:
             messagebox.showerror('Error', e)
             btn.config(state='normal')
+        finally:
+            self.focus()
 
     def create_billing(self, date):
         try:
