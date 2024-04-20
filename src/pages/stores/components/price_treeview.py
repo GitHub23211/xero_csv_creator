@@ -1,7 +1,5 @@
 from tkinter import Frame, Scrollbar, ttk
 
-DEFAULT_COL_WIDTH = 200 # As per Tkinter Treeview docs
-
 class PriceTreeView:
     def __init__(self, root):
         self.root = root
@@ -11,6 +9,7 @@ class PriceTreeView:
         return self.tree
     
     def configure_tree(self, root):
+        DEFAULT_COL_WIDTH = 200 # As per Tkinter Treeview docs
         ID_COL_WIDTH = int(DEFAULT_COL_WIDTH * 0.5)
         NAME_COL_WIDTH = int(DEFAULT_COL_WIDTH * 1)
         PRICE_COL_WIDTH = int(DEFAULT_COL_WIDTH * 0.5)
