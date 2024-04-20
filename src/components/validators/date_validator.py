@@ -3,13 +3,13 @@ from datetime import datetime
 
 class DateValidator:
     def __init__(self):
-        self.max_length = 8
         self.regex = '[0-9]{1,2}/[0-9]{1,2}/[0-9]{2}'
     
-    def validate(self, date):
-        if fullmatch(self.regex, date) is None:
+    def validate(self, input):
+        match = fullmatch(self.regex, input)
+        if match is None:
             return False
-        return self.validate_date_range(date)
+        return self.validate_date_range(input)
     
     def validate_date_range(self, date):
         try:

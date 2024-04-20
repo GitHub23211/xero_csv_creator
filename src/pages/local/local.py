@@ -2,7 +2,7 @@ from .inv_info import InvoiceInfo
 from .add_local import AddLocal
 from components.top import Top
 from components.invoice import Invoice
-from components.date_validator import DateValidator
+from components.validators.date_validator import DateValidator
 
 class Local(Top):
     def __init__(self, root, model, width, height, close_win_handler):
