@@ -6,10 +6,10 @@ from .components.pricing_buttons import PricingButtons
 class StoreList(Frame):
     def __init__(self, root):
         Frame.__init__(self, root)
-        self.search_term = StringVar(value='')
         self.price_list = PriceTreeView(self)
         self.search_bar = SearchBar(self)
         self.buttons = PricingButtons(self)
+        self.search_term = StringVar(value='')
         self.tree = None
     
     def generate_tree(self, items):

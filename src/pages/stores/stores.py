@@ -36,13 +36,12 @@ class Stores(Top):
         self.nav_store_list()
     
     def edit_store(self, old_key, new_key, value):
-        if new_key in self.pricing:
+        if new_key == old_key:
             replace = askyesno('Warning', f'Overwrite the details of store {new_key}?')
-            if replace is False:
-                return
+            if replace is False: return
             
         self.focus()
-        del self.pricing[str(old_key)]
+        del self.pricing[old_key]
 
         self.pricing.update({new_key: value})
         self.save_pricing()
@@ -60,6 +59,5 @@ class Stores(Top):
         self.model.update_pricing(self.pricing)
 
     def sort_helper(self, element):
-        if isinstance(element, str):
-            return -1
+        if isinstance(element, str): return -1
         return int(element)
