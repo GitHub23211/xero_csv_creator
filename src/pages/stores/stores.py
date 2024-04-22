@@ -1,4 +1,3 @@
-from json import dump
 from tkinter.messagebox import askyesno
 from components.top import Top
 from .add_store import AddStore
@@ -8,7 +7,7 @@ from .edit_store import EditStore
 class Stores(Top):
     def __init__(self, root, model, width, height, close_win_handler):
         Top.__init__(self, root, model, StoreList, width, height, close_win_handler)
-        self.prices = self.model.pricing
+        self.pricing = self.model.pricing
         self.columnconfigure(0, weight=1)
         self.curr_view.build()
 
@@ -26,40 +25,39 @@ class Stores(Top):
         self.curr_view.build()
     
     def search_stores(self, term):
-        return self.prices.get(term)
+        return self.pricing.get(term)
     
     def add_new_store(self, key, value):
-        if key in self.prices:
+        if key in self.pricing:
             raise Exception('Store already exists')
 
-        self.prices.update({key: value})
+        self.pricing.update({key: value})
         self.save_pricing()
         self.nav_store_list()
     
     def edit_store(self, old_key, new_key, value):
-        if new_key in self.prices:
+        if new_key in self.pricing:
             replace = askyesno('Warning', f'Overwrite the details of store {new_key}?')
             if replace is False:
                 return
             
         self.focus()
-        del self.prices[str(old_key)]
+        del self.pricing[str(old_key)]
 
-        self.prices.update({new_key: value})
+        self.pricing.update({new_key: value})
         self.save_pricing()
         self.nav_store_list()
     
     def delete_store(self, key):
-        del self.prices[key]
+        del self.pricing[key]
         self.save_pricing()
 
     def sort_pricing(self):
-        self.prices = dict(sorted(self.prices.items(), key=lambda x: self.sort_helper(x[1][0])))
+        self.pricing = dict(sorted(self.pricing.items(), key=lambda x: self.sort_helper(x[1][0])))
 
     def save_pricing(self):
         self.sort_pricing()
-        with open('./store_pricing.json', 'w') as fp:
-            dump(self.prices, fp, indent=4)
+        self.model.update_pricing(self.pricing)
 
     def sort_helper(self, element):
         if isinstance(element, str):

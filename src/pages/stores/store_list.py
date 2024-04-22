@@ -36,7 +36,7 @@ class StoreList(Frame):
 
     def reset_stores(self):
         self.search_term.set('')
-        self.generate_tree(self.master.prices.values())
+        self.generate_tree(self.master.pricing.values())
     
     def edit_store(self):
         selected_store = self.tree.item(self.tree.focus())['values']
@@ -61,4 +61,4 @@ class StoreList(Frame):
         self.buttons.build()
 
         self.tree = self.price_list.get_tree()
-        self.generate_tree(self.master.prices.values())
+        self.generate_tree(self.master.pricing.values())

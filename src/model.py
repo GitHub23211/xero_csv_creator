@@ -1,5 +1,5 @@
 from csv import writer, QUOTE_MINIMAL
-from json import load
+from json import load, dump
 
 from tkinter import filedialog
 
@@ -16,6 +16,11 @@ class Model:
         csv_writer = writer(csv_file, delimiter=",", quotechar='"', quoting=QUOTE_MINIMAL)
         csv_writer.writerows(data)
         csv_file.close()
+    
+    def update_pricing(self, pricing):
+        self.pricing = pricing
+        with open('./store_pricing.json', 'w') as fp:
+            dump(self.pricing, fp, indent=4)
 
     def cleanup(self):
         for file in self.json_files:
