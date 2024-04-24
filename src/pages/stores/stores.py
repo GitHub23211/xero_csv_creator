@@ -7,7 +7,7 @@ from .edit_store import EditStore
 class Stores(Top):
     def __init__(self, root, model, width, height, close_win_handler):
         Top.__init__(self, root, model, StoreList, width, height, close_win_handler)
-        self.pricing = self.model.pricing
+        self.pricing = self.model.get_local_pricing()
         self.columnconfigure(0, weight=1)
         self.curr_view.build()
 
