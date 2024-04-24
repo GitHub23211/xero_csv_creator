@@ -1,20 +1,18 @@
-from os import getenv
 from re import search
 from copy import deepcopy
-from dotenv import load_dotenv
 from operator import itemgetter
 from datetime import datetime, timedelta
 
 MAN_NUM_LENGTH = 7
 
 class Invoice:
-    def __init__(self, pricing):
-        load_dotenv()
+    def __init__(self, pricing, invoice_info):
         self.invoice = [["*ContactName", "*InvoiceNumber", "Reference", "*InvoiceDate", "*DueDate", "InventoryItemCode", "*Description", "*Quantity", "*UnitAmount", "*AccountCode", "*TaxType"]]
-        self.inv_date = '1/1/1990'
-        self.inv_num = '-1'
+        self.inv_date = ''
+        self.inv_num = ''
         self.send_date = ''
         self.due_date = ''
+        self.fixed_info = invoice_info
         self.prices = pricing
         self.entered_man_nums = set()
     
@@ -26,13 +24,13 @@ class Invoice:
 
     def generate_fixed_info(self):
         return [
-                getenv('CONTACT'), 
+                self.fixed_info['CONTACT'], 
                 self.inv_num.zfill(8),
                 self.send_date.strftime('%d/%m/%y'),
                 self.due_date.strftime('%d/%m/%y'),
                 1,
-                getenv('CODE'),
-                getenv('TAX')
+                self.fixed_info['CODE'],
+                self.fixed_info['TAX']
             ]
 
     def append_manifest(self, man_num, man_date, trailer_num, stores, loaded):

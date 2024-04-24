@@ -7,7 +7,7 @@ from components.validators.date_validator import DateValidator
 class Local(Top):
     def __init__(self, root, model, width, height, close_win_handler):
         Top.__init__(self, root, model, InvoiceInfo, width, height, close_win_handler)
-        self.invoice = Invoice(self.model.get_local_pricing())
+        self.invoice = Invoice(self.model.get_local_pricing(), self.model.get_invoice_info())
         self.curr_view.build()
 
     def navigate_add_manifests(self, date, num):
