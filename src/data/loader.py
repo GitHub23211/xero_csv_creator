@@ -6,13 +6,12 @@ def load_files():
             config = load(fp)
 
         file_path_dict = config['PRICINGS']
-        invoice_info = config['INVOICE']
         pricings = {}
 
         for key, path in file_path_dict.items():
             pricings[key] = load_json(path)
 
-        return (pricings, invoice_info)
+        return pricings
     except Exception as e:
         raise e
 

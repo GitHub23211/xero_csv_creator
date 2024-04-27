@@ -4,7 +4,7 @@ from data.loader import load_files, save_local_pricing
 
 class Model:
     def __init__(self):
-        self.pricings, self.invoice_info = self.load_pricings()
+        self.pricings = self.load_pricings()
 
     def load_pricings(self):
         try:
@@ -35,4 +35,7 @@ class Model:
         return self.pricings['RIGID']
     
     def get_invoice_info(self):
-        return self.invoice_info
+        return self.pricings['INFO']
+    
+    def get_fuel_levy(self):
+        return self.pricings['INFO']['FL']
