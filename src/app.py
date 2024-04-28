@@ -15,7 +15,7 @@ class App(Tk):
         self.create_menu()
 
     def create_menu(self):
-        rigid_btn = Button(self, text='Rigid Invoicing', command=lambda: self.open_window(Rigid, rigid_btn, 270, 350))
+        rigid_btn = Button(self, text='Rigid Invoicing', command=lambda: self.open_window(Rigid, rigid_btn, 600, 300))
         local_btn = Button(self, text='Local Invoicing', command=lambda : self.open_window(Local, local_btn, 270, 350))
         billing_btn = Button(self, text='Employee Pay', command=lambda: self.open_window(Billing, billing_btn, 320, 190))
         stores_btn = Button(self, text='Store Pricing', command=lambda: self.open_window(Stores, stores_btn, 400, 190))

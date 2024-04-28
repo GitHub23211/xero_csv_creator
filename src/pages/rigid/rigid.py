@@ -6,4 +6,5 @@ class Rigid(Top):
         Top.__init__(self, root, model, AddRigid, width, height, close_win_handler)
         self.pricing = self.model.get_rigid_pricing()
         self.fuel_levy = self.model.get_fuel_levy()
+        self.columnconfigure(0, weight=1)
         self.curr_view.build()
