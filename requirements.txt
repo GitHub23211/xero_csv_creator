@@ -1,6 +1,6 @@
 altgraph==0.17.4
 et-xmlfile==1.1.0
-importlib-metadata==7.0.2
+importlib_metadata==7.0.2
 openpyxl==3.1.2
 packaging==24.0
 pefile==2023.2.7
